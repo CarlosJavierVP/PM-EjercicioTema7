@@ -11,7 +11,7 @@ class PeliculaDAO {
         lateinit var c: Cursor
 
         try{
-            val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+            val db = DBOpenHelper.getInstance(context)!!.readableDatabase
             val sql = "SELECT * FROM peliculas"
             c = db.rawQuery(sql,null)
             lista = mutableListOf()
@@ -26,4 +26,37 @@ class PeliculaDAO {
         }
         return lista
     }
+
+    fun actualizarBBDD(context: Context?, pelicula:Pelicula){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        db.execSQL(
+            "UPDATE peliculas "
+                    +"SET titulo='${pelicula.title}'"
+                    +"SET descripcion='${pelicula.description}'"
+                    +"SET duracion='${pelicula.time}'"
+                    +"SET anho='${pelicula.year}'"
+                    +"SET pais='${pelicula.country}'"
+                    +"WHERE id=${pelicula.id};"
+        )
+        db.close()
+    }
+
+    fun insertarBBDD(context: Context?, pelicula: Pelicula){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        db.execSQL(
+            "INSERT INTO peliculas (titulo, descripcion, poster, duracion, anho, pais) VALUES "
+                    +" ('${pelicula.title}', '${pelicula.description}', '${pelicula.poster}', "
+                    +" '${pelicula.time}', '${pelicula.year}', '${pelicula.country}');"
+        )
+        db.close()
+    }
+
+    fun eliminar(context: Context?, pelicula: Pelicula){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        db.execSQL(
+            "DELETE FROM peliculas WHERE id=${pelicula.id};"
+        )
+        db.close()
+    }
+
 }
