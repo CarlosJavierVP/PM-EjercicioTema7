@@ -2,6 +2,7 @@ package com.example.ejt7.activities
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -17,13 +18,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import com.example.ejt7.PeliculaProvider
 import com.example.ejt7.R
 import com.example.ejt7.adapter.PeliculaAdapter
+import com.example.ejt7.dataBase.DBOpenHelper
+import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityMainBinding
 import com.example.ejt7.models.Pelicula
 import com.google.android.material.snackbar.Snackbar
-import java.util.Locale
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var intentLaunch:ActivityResultLauncher<Intent>
     private var listaVacia:Boolean=false
+    private lateinit var  miDAO:PeliculaDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +51,10 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        listaPeliculas = cargarLista()
+        miDAO = PeliculaDAO()
+        listaPeliculas = miDAO.cargarLista(this)
         layoutManager = LinearLayoutManager(this)
+        listaVacia = false
         binding.rvPeliculas.layoutManager=layoutManager
         adapter = PeliculaAdapter(listaPeliculas){pelicula ->
             onItemSelected(pelicula)
@@ -83,24 +88,15 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 TODO("Not yet implemented")
             }
-
             override fun onQueryTextChange(p0: String?): Boolean {
                 filterList(p0)
                 return true
             }
-
-
         })
 
     }
 
-    private fun cargarLista():MutableList<Pelicula>{
-        val lista = mutableListOf<Pelicula>()
-        for (pelicula in PeliculaProvider.listaCarga){
-            lista.add(pelicula)
-        }
-        return lista
-    }
+
 
     private fun onItemSelected(pelicula: Pelicula){
         Toast.makeText(
@@ -127,10 +123,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun limpia(){
         listaPeliculas.clear()
-        this.adapter.notifyItemRangeRemoved(0,listaPeliculas.size)
+        this.adapter.notifyItemRangeRemoved(0, this.listaPeliculas.size)
         binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
             onItemSelected(pelicula)
         }
+        listaVacia = true
     }
 
 /*
@@ -147,7 +144,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val movieSelected: Pelicula = listaPeliculas[item.groupId]
-
 
         when (item.itemId) {
             0 -> {
@@ -188,6 +184,9 @@ class MainActivity : AppCompatActivity() {
                         PeliculaAdapter(listaPeliculas) { pelicula ->
                             onItemSelected(pelicula)
                         }
+                    if(listaPeliculas.size<1){
+                        listaVacia = true
+                    }
                 }.create()
         alert.show()
     }
@@ -199,11 +198,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun refrescar(){
         binding.swipeL.setOnRefreshListener {
-            listaPeliculas = cargarLista()
+            //listaPeliculas = cargarLista()
+            listaPeliculas = miDAO.cargarLista(this)
             adapter.notifyItemRangeInserted(0,listaPeliculas.size-1)
             binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
                 onItemSelected(pelicula)
             }
+            listaVacia = false
             binding.swipeL.isRefreshing = false
         }
     }
@@ -212,21 +213,21 @@ class MainActivity : AppCompatActivity() {
         if(p0 != null){
             var filteredList = mutableListOf<Pelicula>()
             if (p0.isNotEmpty() && !listaVacia){
-                listaPeliculas = cargarLista() // modificar cuando implemente la DB
+                listaPeliculas = miDAO.cargarLista(this)
                 for (i in listaPeliculas){
                     if(i.title.lowercase().contains(p0.lowercase())){
                         filteredList.add(i)
                     }
                 }
             }else if (listaPeliculas.size>0){
-                filteredList = cargarLista() // modificar cuando implemente la DB
+                filteredList = miDAO.cargarLista(this)
             }
             if (filteredList.isEmpty()){
                 if(p0.isNotEmpty()){
                     Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
                 }else {
                     if (!listaVacia){
-                        filteredList = cargarLista() // modificar cuando implemente la DB
+                        filteredList = miDAO.cargarLista(this)
                     }
                 }
                 adapter.setFilteredList(filteredList)

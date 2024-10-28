@@ -6,12 +6,18 @@ class PeliculaContract {
     companion object{
         val NOMBRE_BD = "dbpeliculas"
         val VERSION = 1
-        class Entrada:BaseColumns{
-            val TABLA = "peliculas"
-            val IDCOL = "id"
-            val TITULOCOL = "titulo"
-            val DESCRIPCIONCOLC = "descripcion"
-            val POSTERCOL = "poster"
+        class Entrada: BaseColumns{
+            companion object{
+                val TABLA = "peliculas"
+                val IDCOL = "id"
+                val TITULOCOL = "titulo"
+                val DESCRIPCIONCOLC = "descripcion"
+                val POSTERCOL = "poster"
+                val TIMECOL = "duracion"
+                val YEARCOL = "anho"
+                val COUNTRYCOL = "pais"
+            }
+
         }
     }
 }
