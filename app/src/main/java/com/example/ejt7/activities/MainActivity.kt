@@ -1,4 +1,4 @@
-package com.example.ejt7
+package com.example.ejt7.activities
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -16,6 +16,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.example.ejt7.PeliculaProvider
+import com.example.ejt7.R
+import com.example.ejt7.adapter.PeliculaAdapter
 import com.example.ejt7.databinding.ActivityMainBinding
 import com.example.ejt7.models.Pelicula
 import com.google.android.material.snackbar.Snackbar

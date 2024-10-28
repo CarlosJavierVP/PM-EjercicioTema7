@@ -1,4 +1,4 @@
-package com.example.ejt7
+package com.example.ejt7.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.ejt7.R
 import com.example.ejt7.databinding.ActivityDosBinding
 
 class ActivityDos : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.ejt7
+package com.example.ejt7.viewHolder
 
 import android.view.ContextMenu
 import android.view.View
