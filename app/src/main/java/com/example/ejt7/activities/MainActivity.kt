@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -22,6 +23,7 @@ import com.example.ejt7.adapter.PeliculaAdapter
 import com.example.ejt7.databinding.ActivityMainBinding
 import com.example.ejt7.models.Pelicula
 import com.google.android.material.snackbar.Snackbar
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutManager: LayoutManager
 
     private lateinit var intentLaunch:ActivityResultLauncher<Intent>
+    private var listaVacia:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +78,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         refrescar()
+
+        binding.searchView.setOnQueryTextListener(object : OnQueryTextListener, android.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                filterList(p0)
+                return true
+            }
+
+
+        })
 
     }
 
@@ -189,6 +205,42 @@ class MainActivity : AppCompatActivity() {
                 onItemSelected(pelicula)
             }
             binding.swipeL.isRefreshing = false
+        }
+    }
+
+    private fun filterList(p0: String?){
+        if(p0 != null){
+            var filteredList = mutableListOf<Pelicula>()
+            if (p0.isNotEmpty() && !listaVacia){
+                listaPeliculas = cargarLista() // modificar cuando implemente la DB
+                for (i in listaPeliculas){
+                    if(i.title.lowercase().contains(p0.lowercase())){
+                        filteredList.add(i)
+                    }
+                }
+            }else if (listaPeliculas.size>0){
+                filteredList = cargarLista() // modificar cuando implemente la DB
+            }
+            if (filteredList.isEmpty()){
+                if(p0.isNotEmpty()){
+                    Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
+                }else {
+                    if (!listaVacia){
+                        filteredList = cargarLista() // modificar cuando implemente la DB
+                    }
+                }
+                adapter.setFilteredList(filteredList)
+                listaPeliculas = filteredList
+                binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
+                    onItemSelected(pelicula)
+                }
+            }else {
+                adapter.setFilteredList(filteredList)
+                listaPeliculas = filteredList
+                binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
+                    onItemSelected(pelicula)
+                }
+            }
         }
     }
 
