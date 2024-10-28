@@ -97,13 +97,25 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun onItemSelected(movieSelected: Pelicula){
+        val intent = Intent(this, ActivityDetalle::class.java)
+        intent.putExtra("TITULO", movieSelected.title)
+        intent.putExtra("DESCRIPCION", movieSelected.description)
+        intent.putExtra("IMAGEN", movieSelected.poster)
+        intent.putExtra("DURACION", movieSelected.time)
+        intent.putExtra("AÑO", movieSelected.year)
+        intent.putExtra("PAIS", movieSelected.country)
+        intentLaunch.launch(intent)
 
-    private fun onItemSelected(pelicula: Pelicula){
+        //Toast --> para mostrar una pequeña ventana con info
+        /*
         Toast.makeText(
             this,
             "Duración: ${pelicula.time} minutos - Año: ${pelicula.year}",
             Toast.LENGTH_LONG
         ).show()
+
+         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -176,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(
                     "Aceptar"
                 ) { _, _ ->
+                    //habría que añadir el método del dao de eliminar la película de la DB, pero para este proyecto no me interesa
                     display("Se ha eliminado ${movieSelected.title}")
                     listaPeliculas.removeAt(item.groupId)
                     adapter.notifyItemRemoved(item.groupId)
