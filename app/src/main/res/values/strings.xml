@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EjT7</string>
+    <string name="recargar">recargar</string>
+    <string name="limpiar">limpiar</string>
+    <string name="cambiar">cambiar</string>
+    <string name="cancelar">cancelar</string>
+    <string name="nuevo_titulo">nuevo_titulo</string>
+</resources>
