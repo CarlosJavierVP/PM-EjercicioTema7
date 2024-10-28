@@ -63,10 +63,10 @@ class MainActivity : AppCompatActivity() {
                 val posicionPeli = result.data?.extras?.getInt("POSICION_PELI")
                 posicionPeli?.let {
                     listaPeliculas[it].title = nuevoTitulo
-                    adapter = PeliculaAdapter(listaPeliculas){
+                    this.adapter = PeliculaAdapter(listaPeliculas){
                         pelicula -> onItemSelected(pelicula)
                     }
-                    binding.rvPeliculas.adapter = adapter
+                    binding.rvPeliculas.adapter = this.adapter
                 }
             }
         }
@@ -179,13 +179,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refrescar(){
-        binding.main.setOnRefreshListener {
+        binding.swipeL.setOnRefreshListener {
             listaPeliculas = cargarLista()
             adapter.notifyItemRangeInserted(0,listaPeliculas.size-1)
             binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
                 onItemSelected(pelicula)
             }
-            binding.main.isRefreshing = false
+            binding.swipeL.isRefreshing = false
         }
     }
 
