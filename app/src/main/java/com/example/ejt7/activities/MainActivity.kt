@@ -2,7 +2,6 @@ package com.example.ejt7.activities
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.database.Cursor
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.ejt7.R
 import com.example.ejt7.adapter.PeliculaAdapter
-import com.example.ejt7.dataBase.DBOpenHelper
 import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityMainBinding
 import com.example.ejt7.models.Pelicula
@@ -52,9 +50,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         miDAO = PeliculaDAO()
-        listaPeliculas = miDAO.cargarLista(this)
+        listaPeliculas = miDAO.findAll(this)
         layoutManager = LinearLayoutManager(this)
-        listaVacia = false
         binding.rvPeliculas.layoutManager=layoutManager
         adapter = PeliculaAdapter(listaPeliculas){pelicula ->
             onItemSelected(pelicula)
@@ -75,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                 val posicionPeli = result.data?.extras?.getInt("POSICION_PELI")
                 posicionPeli?.let {
                     listaPeliculas[it].title = nuevoTitulo
+                    miDAO.update(this,listaPeliculas[it])
                     this.adapter = PeliculaAdapter(listaPeliculas){
                         pelicula -> onItemSelected(pelicula)
                     }
@@ -127,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.limpiar ->{
-                limpia()
+                snackBarBorrar()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -136,6 +134,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun limpia(){
         listaPeliculas.clear()
+        miDAO.deleteAll(this)
         this.adapter.notifyItemRangeRemoved(0, this.listaPeliculas.size)
         binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
             onItemSelected(pelicula)
@@ -189,20 +188,36 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(
                     "Aceptar"
                 ) { _, _ ->
-                    //habría que añadir el método del dao de eliminar la película de la DB, pero para este proyecto no me interesa
                     display("Se ha eliminado ${movieSelected.title}")
-                    listaPeliculas.removeAt(item.groupId)
-                    adapter.notifyItemRemoved(item.groupId)
-                    adapter.notifyItemRangeChanged(item.groupId, listaPeliculas.size)
-                    binding.rvPeliculas.adapter =
-                        PeliculaAdapter(listaPeliculas) { pelicula ->
-                            onItemSelected(pelicula)
-                        }
-                    if(listaPeliculas.size<1){
-                        listaVacia = true
-                    }
+                    removeMovie(item, movieSelected)
                 }.create()
         alert.show()
+    }
+    private fun snackBarBorrar(){
+        val dialog =
+            AlertDialog.Builder(this).setTitle("Eliminar todas las películas")
+                .setMessage("¿Estás seguro de eliminar todas las películas?")
+                .setNeutralButton("Cerrar",null)
+                .setPositiveButton("Aceptar"){_,_->
+                    display("Se han eliminado ${listaPeliculas.size} películas")
+                    limpia()
+                }.create()
+        dialog.show()
+    }
+
+
+    private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
+        listaPeliculas.removeAt(item.groupId)
+        miDAO.delete(this,pelicula)
+        adapter.notifyItemRemoved(item.groupId)
+        adapter.notifyItemRangeChanged(item.groupId, listaPeliculas.size)
+        binding.rvPeliculas.adapter =
+            PeliculaAdapter(listaPeliculas) {
+                onItemSelected(pelicula)
+            }
+        if (listaPeliculas.size < 1) {
+            listaVacia = true
+        }
     }
 
 
@@ -213,7 +228,7 @@ class MainActivity : AppCompatActivity() {
     private fun refrescar(){
         binding.swipeL.setOnRefreshListener {
             //listaPeliculas = cargarLista()
-            listaPeliculas = miDAO.cargarLista(this)
+            listaPeliculas = miDAO.findAll(this)
             adapter.notifyItemRangeInserted(0,listaPeliculas.size-1)
             binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
                 onItemSelected(pelicula)
@@ -227,21 +242,21 @@ class MainActivity : AppCompatActivity() {
         if(p0 != null){
             var filteredList = mutableListOf<Pelicula>()
             if (p0.isNotEmpty() && !listaVacia){
-                listaPeliculas = miDAO.cargarLista(this)
+                listaPeliculas = miDAO.findAll(this)
                 for (i in listaPeliculas){
                     if(i.title.lowercase().contains(p0.lowercase())){
                         filteredList.add(i)
                     }
                 }
             }else if (listaPeliculas.size>0){
-                filteredList = miDAO.cargarLista(this)
+                filteredList = miDAO.findAll(this)
             }
             if (filteredList.isEmpty()){
                 if(p0.isNotEmpty()){
                     Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
                 }else {
                     if (!listaVacia){
-                        filteredList = miDAO.cargarLista(this)
+                        filteredList = miDAO.findAll(this)
                     }
                 }
                 adapter.setFilteredList(filteredList)

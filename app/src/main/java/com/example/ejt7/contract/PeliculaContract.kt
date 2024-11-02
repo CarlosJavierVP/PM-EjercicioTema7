@@ -8,7 +8,7 @@ class PeliculaContract {
         val VERSION = 1
         class Entrada: BaseColumns{
             companion object{
-                val TABLA = "peliculas"
+                val TABLA = "Pelicula"
                 val IDCOL = "id"
                 val TITULOCOL = "titulo"
                 val DESCRIPCIONCOLC = "descripcion"

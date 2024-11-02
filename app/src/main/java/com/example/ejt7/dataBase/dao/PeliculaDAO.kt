@@ -5,14 +5,14 @@ import android.database.Cursor
 import com.example.ejt7.dataBase.DBOpenHelper
 import com.example.ejt7.models.Pelicula
 
-class PeliculaDAO {
-    fun cargarLista(context: Context):MutableList<Pelicula>{
+class PeliculaDAO():DAO<Pelicula> {
+    override fun findAll(context: Context?): MutableList<Pelicula> {
         var lista = mutableListOf<Pelicula>()
         lateinit var c: Cursor
 
         try{
             val db = DBOpenHelper.getInstance(context)!!.readableDatabase
-            val sql = "SELECT * FROM peliculas"
+            val sql = "SELECT * FROM Pelicula"
             c = db.rawQuery(sql,null)
             lista = mutableListOf()
 
@@ -27,36 +27,39 @@ class PeliculaDAO {
         return lista
     }
 
-    fun actualizarBBDD(context: Context?, pelicula:Pelicula){
+    override fun update(context: Context?, pelicula:Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
-        db.execSQL(
-            "UPDATE peliculas "
-                    +"SET titulo='${pelicula.title}'"
-                    +"SET descripcion='${pelicula.description}'"
-                    +"SET duracion='${pelicula.time}'"
-                    +"SET anho='${pelicula.year}'"
-                    +"SET pais='${pelicula.country}'"
-                    +"WHERE id=${pelicula.id};"
-        )
+        val q = db.compileStatement("UPDATE Pelicula SET titulo=? WHERE id=${pelicula.id};")
+        q.bindString(1,pelicula.title)
+        q.executeUpdateDelete()
+        q.close()
         db.close()
     }
 
-    fun insertarBBDD(context: Context?, pelicula: Pelicula){
+    override fun save(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
-            "INSERT INTO peliculas (titulo, descripcion, poster, duracion, anho, pais) VALUES "
+            "INSERT INTO Pelicula (titulo, descripcion, poster, duracion, anho, pais) VALUES "
                     +" ('${pelicula.title}', '${pelicula.description}', '${pelicula.poster}', "
                     +" '${pelicula.time}', '${pelicula.year}', '${pelicula.country}');"
         )
         db.close()
     }
 
-    fun eliminar(context: Context?, pelicula: Pelicula){
+    override fun delete(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
-            "DELETE FROM peliculas WHERE id=${pelicula.id};"
+            "DELETE FROM Pelicula WHERE id=${pelicula.id};"
         )
         db.close()
     }
+
+    fun deleteAll(context: Context?){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        db.execSQL("DELETE FROM Pelicula;")
+        db.close()
+    }
+
+
 
 }

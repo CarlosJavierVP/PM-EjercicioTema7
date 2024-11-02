@@ -54,13 +54,13 @@ class ActivityDetalle : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_detalle,menu)
+        menuInflater.inflate(R.menu.menu,menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.atras ->{
+            R.id.limpiar ->{
                 volverAtras()
                 true
             }
