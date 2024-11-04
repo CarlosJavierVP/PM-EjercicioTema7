@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun onItemSelected(movieSelected: Pelicula){
         val intent = Intent(this, ActivityDetalle::class.java)
         intent.putExtra("TITULO", movieSelected.title)

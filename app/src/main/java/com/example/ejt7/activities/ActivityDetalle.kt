@@ -5,16 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
+import com.example.ejt7.adapter.PeliculaAdapter
+import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityDetalleBinding
+import com.example.ejt7.models.Pelicula
 
 class ActivityDetalle : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetalleBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,26 +56,13 @@ class ActivityDetalle : AppCompatActivity() {
         duracion.text = "Duración: $duracionPeli minutos"
         anho.text = "Año: $yearPeli"
         pais.text = "Nacionalidad: $paisPeli"
-
+        finish()
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.limpiar ->{
-                volverAtras()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    fun volverAtras(){
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
 }
