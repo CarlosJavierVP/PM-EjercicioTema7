@@ -56,7 +56,7 @@ class ActivityDetalle : AppCompatActivity() {
         duracion.text = "Duración: $duracionPeli minutos"
         anho.text = "Año: $yearPeli"
         pais.text = "Nacionalidad: $paisPeli"
-        finish()
+
     }
 
 
