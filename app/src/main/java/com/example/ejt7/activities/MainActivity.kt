@@ -29,7 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
-    private lateinit var listaPeliculas:MutableList<Pelicula>
+    private lateinit var listaPeliculas:List<Pelicula>
     private lateinit var adapter: PeliculaAdapter
     private lateinit var layoutManager: LayoutManager
 
@@ -141,10 +141,13 @@ class MainActivity : AppCompatActivity() {
     private fun limpia(){
         listaPeliculas.clear()
         miDAO.deleteAll(this)
-        this.adapter.notifyItemRangeRemoved(0, this.listaPeliculas.size)
+        //this.adapter.notifyItemRangeRemoved(0, this.listaPeliculas.size)
+        adapter.notifyDataSetChanged()
+        /*
         binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
             onItemSelected(pelicula)
         }
+         */
         listaVacia = true
     }
 
@@ -214,13 +217,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
         listaPeliculas.removeAt(item.groupId)
+        listaPeliculas = listaPeliculas.minus(pelicula)
         miDAO.delete(this,pelicula)
         adapter.notifyItemRemoved(item.groupId)
         adapter.notifyItemRangeChanged(item.groupId, listaPeliculas.size)
+        /*
         binding.rvPeliculas.adapter =
             PeliculaAdapter(listaPeliculas) {
                 onItemSelected(pelicula)
             }
+         */
         if (listaPeliculas.size < 1) {
             listaVacia = true
         }
@@ -267,15 +273,19 @@ class MainActivity : AppCompatActivity() {
                 }
                 adapter.setFilteredList(filteredList)
                 listaPeliculas = filteredList
+                /*
                 binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
                     onItemSelected(pelicula)
                 }
+                 */
             }else {
                 adapter.setFilteredList(filteredList)
                 listaPeliculas = filteredList
+                /*
                 binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
                     onItemSelected(pelicula)
                 }
+                 */
             }
         }
     }
