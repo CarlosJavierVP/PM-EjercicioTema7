@@ -2,10 +2,12 @@ package com.example.ejt7.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ejt7.viewHolder.PeliculaViewHolder
 import com.example.ejt7.R
 import com.example.ejt7.models.Pelicula
+import com.example.ejt7.utils.PeliculaDiffUtil
 
 class PeliculaAdapter(private var listaPeli: List<Pelicula>,
                       private val onClickListener: (Pelicula)->Unit) : RecyclerView.Adapter<PeliculaViewHolder>() {
@@ -28,6 +30,13 @@ class PeliculaAdapter(private var listaPeli: List<Pelicula>,
         this.listaPeli=mList
         notifyItemRangeInserted(0,mList.size)
 
+    }
+
+    fun updateList(newList: List<Pelicula>){
+        val peliDiff = PeliculaDiffUtil(listaPeli, newList)
+        val result = DiffUtil.calculateDiff(peliDiff)
+        listaPeli = newList
+        result.dispatchUpdatesTo(this)
     }
 
 

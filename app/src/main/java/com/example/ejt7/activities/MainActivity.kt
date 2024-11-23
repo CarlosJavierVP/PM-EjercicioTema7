@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -90,6 +91,12 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(p0: String?): Boolean {
                 filterList(p0)
                 return true
+            }
+        })
+
+        this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                finish()
             }
         })
 

@@ -14,10 +14,7 @@ import com.example.ejt7.R
 import com.example.ejt7.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
-    private var preferences: SharedPreferences? = null
-    private var user: String? = ""
-    private var password: String? = ""
-    private var remember = false
+    private lateinit var preferences: SharedPreferences
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
