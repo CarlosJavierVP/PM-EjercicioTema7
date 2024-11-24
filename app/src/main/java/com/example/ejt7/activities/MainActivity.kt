@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -84,16 +85,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         refrescar()
-
+        /*
         binding.searchView.setOnQueryTextListener(object : OnQueryTextListener, android.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
             }
             override fun onQueryTextChange(p0: String?): Boolean {
                 filterList(p0)
                 return true
             }
         })
+         */
 
         this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -126,6 +127,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
+        val search = menu?.findItem(R.id.buscador)
+        val searchView = search?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : OnQueryTextListener,
+        android.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                filterList(p0)
+                return true
+            }
+        })
         return true
     }
 
@@ -212,17 +226,8 @@ class MainActivity : AppCompatActivity() {
     private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
         listaPeliculas = listaPeliculas.minus(pelicula)
         miDAO.delete(this,pelicula)
-        adapter.notifyItemRemoved(item.groupId)
-        adapter.notifyItemRangeChanged(item.groupId, listaPeliculas.size)
-        /*
-        binding.rvPeliculas.adapter =
-            PeliculaAdapter(listaPeliculas) {
-                onItemSelected(pelicula)
-            }
-         */
-        if (listaPeliculas.size < 1) {
-            listaVacia = true
-        }
+        adapter.updateList(listaPeliculas)
+       listaVacia = listaPeliculas.isEmpty()
     }
 
 
@@ -235,8 +240,6 @@ class MainActivity : AppCompatActivity() {
             //listaPeliculas = cargarLista()
             listaPeliculas = miDAO.findAll(this)
             adapter.updateList(listaPeliculas)
-            adapter.notifyItemRangeInserted(0,listaPeliculas.size-1)
-            listaVacia = false
             binding.swipeL.isRefreshing = false
         }
     }
@@ -246,12 +249,10 @@ class MainActivity : AppCompatActivity() {
             var filteredList = listaPeliculas.filter { pelicula ->
                 pelicula.title.contains(p0, ignoreCase = true)
             }
-            if (p0.isNotEmpty() && filteredList.isNotEmpty()){
-                adapter.updateList(filteredList)
-
-            }else if (filteredList.isEmpty()){
+            if (filteredList.isEmpty()){
                 Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
             }
+            adapter.updateList(filteredList)
         }
     }
 

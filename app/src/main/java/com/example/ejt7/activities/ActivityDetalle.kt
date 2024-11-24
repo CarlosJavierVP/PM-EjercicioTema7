@@ -35,6 +35,7 @@ class ActivityDetalle : AppCompatActivity() {
             insets
         }
 
+
         //recibir los datos del mainActivity
         val tituloPeli = intent.getStringExtra("TITULO")
         val descripcionPeli = intent.getStringExtra("DESCRIPCION")
@@ -42,6 +43,8 @@ class ActivityDetalle : AppCompatActivity() {
         val duracionPeli = intent.getIntExtra("DURACION",0)
         val yearPeli = intent.getIntExtra("AÑO",0)
         val paisPeli = intent.getStringExtra("PAIS")
+
+        this.title = tituloPeli
 
         val titulo = binding.txtTitle
         val descrip = binding.txtDescription

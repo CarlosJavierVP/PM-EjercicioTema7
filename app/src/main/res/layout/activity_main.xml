@@ -19,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
@@ -26,6 +27,7 @@
             android:iconifiedByDefault="false"
             android:queryBackground="@android:color/transparent"
             android:queryHint="Buscar..." />
+            -->
     </androidx.cardview.widget.CardView>
 
 
