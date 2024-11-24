@@ -35,8 +35,8 @@ class LoginActivity : AppCompatActivity() {
         preferences = getSharedPreferences("app", MODE_PRIVATE)
         setValues()
         binding.btnLogin.setOnClickListener {
-            val email = binding.etEmail.editText.toString()
-            val password = binding.etPassword.editText.toString()
+            val email = binding.emailEdt.text.toString()
+            val password = binding.passwordEdt.text.toString()
             if(login(email, password)) goToMain()
             savePreferences(email, password)
         }
@@ -53,16 +53,16 @@ class LoginActivity : AppCompatActivity() {
         }
     }
     private fun savePreferences(email: String, password: String){
-        val edit = preferences?.edit()
+        val edit = preferences.edit()
         if(binding.switch1.isChecked){
-            edit?.putString("email", email)
-            edit?.putString("password", password)
-            edit?.putBoolean("remember", true)
-            edit?.apply()
+            edit.putString("email", email)
+            edit.putString("password", password)
+            edit.putBoolean("remember", true)
+            edit.apply()
         }else{
-            edit?.clear()
-            edit?.putBoolean("remember", false)
-            edit?.apply()
+            edit.clear()
+            edit.putBoolean("remember", false)
+            edit.apply()
         }
     }
 

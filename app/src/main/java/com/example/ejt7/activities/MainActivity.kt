@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        this.title = getString(R.string.pelis)
         miDAO = PeliculaDAO()
         listaPeliculas = miDAO.findAll(this)
         layoutManager = LinearLayoutManager(this)
@@ -242,40 +243,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun filterList(p0: String?){
         if(p0 != null){
-            var filteredList = mutableListOf<Pelicula>()
-            if (p0.isNotEmpty() && !listaVacia){
-                listaPeliculas = miDAO.findAll(this)
-                for (i in listaPeliculas){
-                    if(i.title.lowercase().contains(p0.lowercase())){
-                        filteredList.add(i)
-                    }
-                }
-            }else if (listaPeliculas.size>0){
-                filteredList = miDAO.findAll(this)
+            var filteredList = listaPeliculas.filter { pelicula ->
+                pelicula.title.contains(p0, ignoreCase = true)
             }
-            if (filteredList.isEmpty()){
-                if(p0.isNotEmpty()){
-                    Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
-                }else {
-                    if (!listaVacia){
-                        filteredList = miDAO.findAll(this)
-                    }
-                }
-                adapter.setFilteredList(filteredList)
-                listaPeliculas = filteredList
-                /*
-                binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
-                    onItemSelected(pelicula)
-                }
-                 */
-            }else {
-                adapter.setFilteredList(filteredList)
-                listaPeliculas = filteredList
-                /*
-                binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
-                    onItemSelected(pelicula)
-                }
-                 */
+            if (p0.isNotEmpty() && filteredList.isNotEmpty()){
+                adapter.updateList(filteredList)
+
+            }else if (filteredList.isEmpty()){
+                Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
             }
         }
     }
