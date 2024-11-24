@@ -139,16 +139,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun limpia(){
-        listaPeliculas.clear()
         miDAO.deleteAll(this)
-        //this.adapter.notifyItemRangeRemoved(0, this.listaPeliculas.size)
-        adapter.notifyDataSetChanged()
-        /*
-        binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
-            onItemSelected(pelicula)
-        }
-         */
-        listaVacia = true
+        listaPeliculas = emptyList()
+        adapter.updateList(listaPeliculas)
     }
 
 /*
@@ -216,7 +209,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
-        listaPeliculas.removeAt(item.groupId)
         listaPeliculas = listaPeliculas.minus(pelicula)
         miDAO.delete(this,pelicula)
         adapter.notifyItemRemoved(item.groupId)
@@ -241,10 +233,8 @@ class MainActivity : AppCompatActivity() {
         binding.swipeL.setOnRefreshListener {
             //listaPeliculas = cargarLista()
             listaPeliculas = miDAO.findAll(this)
+            adapter.updateList(listaPeliculas)
             adapter.notifyItemRangeInserted(0,listaPeliculas.size-1)
-            binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
-                onItemSelected(pelicula)
-            }
             listaVacia = false
             binding.swipeL.isRefreshing = false
         }
