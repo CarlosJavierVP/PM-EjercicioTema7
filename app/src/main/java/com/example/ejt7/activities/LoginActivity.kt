@@ -16,6 +16,9 @@ import com.example.ejt7.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
     private lateinit var preferences: SharedPreferences
     private lateinit var binding: ActivityLoginBinding
+    private var email: String=""
+    private var password: String=""
+    private var remember: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +31,8 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        preferences = getSharedPreferences("Film Pro Manager", MODE_PRIVATE)
+        this.title=getString(R.string.login)
+        preferences = getSharedPreferences("app", MODE_PRIVATE)
         setValues()
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.editText.toString()
@@ -41,9 +44,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setValues(){
-        val email = preferences?.getString("email", "")
-        val password = preferences?.getString("password", "")
-        val remember = preferences?.getBoolean("remember", false)
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             binding.etEmail.editText?.setText(email)
             binding.etPassword.editText?.setText(password)
