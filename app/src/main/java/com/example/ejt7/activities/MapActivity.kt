@@ -12,6 +12,8 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
 import org.osmdroid.views.overlay.OverlayItem
 
 class MapActivity : AppCompatActivity() {
@@ -37,10 +39,31 @@ class MapActivity : AppCompatActivity() {
                 GeoPoint(36.7194937132025, -4.365499010622804)
             )
         )
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
+            items,
+            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
+                override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
+                    return true
+                }
+
+                override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
+                    return false
+                }
+            }, applicationContext
+        )
+        mOverlay.setFocusItemsOnTap(true)
+        map.getOverlays().add(mOverlay)
+        mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
+    }
+
+    public override fun onResume(){
+        super.onResume()
+        map.onResume()
+    }
+
+    public override fun onPause() {
+        super.onPause()
+        map.onPause()
     }
 }
