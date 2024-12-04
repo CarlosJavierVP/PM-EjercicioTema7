@@ -245,14 +245,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterList(p0: String?){
-        if(p0 != null){
-            var filteredList = listaPeliculas.filter { pelicula ->
+        p0?.let { r ->
+            var filtrarPeli = listaPeliculas.filter { pelicula ->
                 pelicula.title.contains(p0, ignoreCase = true)
             }
-            if (filteredList.isEmpty()){
+            if (filtrarPeli.isEmpty()){
                 Toast.makeText(this, "No existe esa película", Toast.LENGTH_SHORT).show()
             }
-            adapter.updateList(filteredList)
+            adapter.updateList(filtrarPeli)
         }
     }
 
