@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
-        listaPeliculas = listaPeliculas.minus(pelicula)
+        listaPeliculas = listaPeliculas.filter { it != pelicula }
         miDAO.delete(this,pelicula)
         adapter.updateList(listaPeliculas)
        listaVacia = listaPeliculas.isEmpty()
