@@ -52,6 +52,7 @@ class DBOpenHelper private constructor(context: Context?):
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         if (p0 != null) {
             p0.execSQL("DROP TABLE IF EXISTS ${PeliculaContract.Companion.Entrada.TABLA};")
+            p0.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA}")
             onCreate(p0)
         }
     }
