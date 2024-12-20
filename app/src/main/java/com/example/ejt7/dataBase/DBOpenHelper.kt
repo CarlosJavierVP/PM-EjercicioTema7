@@ -61,20 +61,8 @@ class DBOpenHelper private constructor(context: Context?):
         val listaPeliculas = cargarPeliculas()
         val listaCines = cargarCines()
         listaPeliculas.forEach { addMovie(db, it) }
-
-
-        for (peli in listaPeliculas){
-            db.execSQL(
-                ("INSERT INTO ${PeliculaContract.Companion.Entrada.TABLA}("+
-                        "${PeliculaContract.Companion.Entrada.TITULOCOL},"+
-                        "${PeliculaContract.Companion.Entrada.DESCRIPCIONCOLC},"+
-                        "${PeliculaContract.Companion.Entrada.POSTERCOL},"+
-                        "${PeliculaContract.Companion.Entrada.TIMECOL},"+
-                        "${PeliculaContract.Companion.Entrada.YEARCOL},"+
-                        "${PeliculaContract.Companion.Entrada.COUNTRYCOL})"+
-                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
-            )
-        }
+        listaCines.forEach { addCine(db, it) }
+        relacionCinePeli(db)
     }
 
     private fun addMovie(db: SQLiteDatabase, peli: Pelicula){
@@ -179,5 +167,22 @@ class DBOpenHelper private constructor(context: Context?):
         Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
     )
 
+    private fun randomCine(): Int{
+        return cargarCines().random().id
+    }
+
+    private fun relacionCinePeli(db: SQLiteDatabase){
+        val pelis = cargarPeliculas()
+        pelis.forEach { pelicula ->
+            val cineSeleccionado = mutableSetOf<Int>()
+            while (cineSeleccionado.size < 5){
+                val idRandom = randomCine()
+                if(!cineSeleccionado.contains(idRandom)){
+                    db.execSQL("INSERT INTO Pelicula_Cine(peli_id, cine_id) values (${pelicula.id}, ${idRandom})")
+                    cineSeleccionado.add(idRandom)
+                }
+            }
+        }
+    }
 
 }
