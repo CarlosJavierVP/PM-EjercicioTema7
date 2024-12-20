@@ -39,5 +39,7 @@ class PeliculaAdapter(private var listaPeli: List<Pelicula>,
         result.dispatchUpdatesTo(this)
     }
 
+    fun allMovies():List<Pelicula> = listaPeli
+
 
 }

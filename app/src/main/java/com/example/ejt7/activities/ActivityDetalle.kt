@@ -43,6 +43,7 @@ class ActivityDetalle : AppCompatActivity() {
         val duracionPeli = intent.getIntExtra("DURACION",0)
         val yearPeli = intent.getIntExtra("AÑO",0)
         val paisPeli = intent.getStringExtra("PAIS")
+        val posicionPeli = intent.getIntExtra("POSICION_PELI",0)
 
         this.title = tituloPeli
 

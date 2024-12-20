@@ -56,10 +56,10 @@ class MainActivity : AppCompatActivity() {
         listaPeliculas = miDAO.findAll(this)
         layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.layoutManager=layoutManager
-        adapter = PeliculaAdapter(listaPeliculas){pelicula ->
+        this.adapter = PeliculaAdapter(listaPeliculas){pelicula ->
             onItemSelected(pelicula)
         }
-        binding.rvPeliculas.adapter = adapter
+        binding.rvPeliculas.adapter = this.adapter
         //manejar los espacios entre los items del RecyclerView
         binding.rvPeliculas.setHasFixedSize(true)
         binding.rvPeliculas.itemAnimator = DefaultItemAnimator()
@@ -78,8 +78,8 @@ class MainActivity : AppCompatActivity() {
                     miDAO.update(this,listaPeliculas[it])
                     this.adapter = PeliculaAdapter(listaPeliculas){
                         pelicula -> onItemSelected(pelicula)
+                        binding.rvPeliculas.adapter = this.adapter
                     }
-                    binding.rvPeliculas.adapter = this.adapter
                 }
             }
         }
@@ -105,14 +105,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onItemSelected(movieSelected: Pelicula){
-        val intent = Intent(this, ActivityDetalle::class.java)
-        intent.putExtra("TITULO", movieSelected.title)
-        intent.putExtra("DESCRIPCION", movieSelected.description)
-        intent.putExtra("IMAGEN", movieSelected.poster)
-        intent.putExtra("DURACION", movieSelected.time)
-        intent.putExtra("AÑO", movieSelected.year)
-        intent.putExtra("PAIS", movieSelected.country)
-        intentLaunch.launch(intent)
+
 
         //Toast --> para mostrar una pequeña ventana con info
         /*
@@ -146,7 +139,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.limpiar ->{
-                snackBarBorrar()
+                snackBarBorrarDialogo()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -181,9 +174,24 @@ class MainActivity : AppCompatActivity() {
             1 -> {
                 enviarDatos(movieSelected, item)
             }
+            2 -> {
+                detallesPeli(movieSelected, item)
+            }
             else -> return super.onContextItemSelected(item)
         }
         return true
+    }
+
+    private fun detallesPeli(movieSelected: Pelicula, item: MenuItem){
+        val intent = Intent(this, ActivityDetalle::class.java)
+        intent.putExtra("TITULO", movieSelected.title)
+        intent.putExtra("DESCRIPCION", movieSelected.description)
+        intent.putExtra("IMAGEN", movieSelected.poster)
+        intent.putExtra("DURACION", movieSelected.time)
+        intent.putExtra("AÑO", movieSelected.year)
+        intent.putExtra("PAIS", movieSelected.country)
+        intent.putExtra("POSICION_PELI", item.groupId)
+        intentLaunch.launch(intent)
     }
 
     private fun enviarDatos(movieSelected: Pelicula, item:MenuItem) {
@@ -210,7 +218,7 @@ class MainActivity : AppCompatActivity() {
                 }.create()
         alert.show()
     }
-    private fun snackBarBorrar(){
+    private fun snackBarBorrarDialogo(){
         val dialog =
             AlertDialog.Builder(this).setTitle("Eliminar todas las películas")
                 .setMessage("¿Estás seguro de eliminar todas las películas?")
