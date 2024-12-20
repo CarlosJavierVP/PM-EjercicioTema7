@@ -2,7 +2,10 @@ package com.example.ejt7.dataBase.dao
 
 import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import com.example.ejt7.dataBase.DBOpenHelper
+import com.example.ejt7.models.Cine
+import com.example.ejt7.models.Ciudad
 import com.example.ejt7.models.Pelicula
 
 class PeliculaDAO():DAO<Pelicula> {
@@ -58,6 +61,33 @@ class PeliculaDAO():DAO<Pelicula> {
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL("DELETE FROM Pelicula;")
         db.close()
+    }
+
+    fun findMovieById(context: Context?, id:Int): Pelicula{
+       lateinit var res: Pelicula
+       lateinit var db: SQLiteDatabase
+       lateinit var c: Cursor
+       try {
+           db = DBOpenHelper.getInstance(context)!!.readableDatabase
+           c = db.rawQuery("SELECT * FROM Pelicula WHERE id = ?",null)
+           if(c.moveToNext()){
+               res = Pelicula(
+                   c.getInt(0),
+                   c.getString(1),
+                   c.getString(2),
+                   c.getInt(3),
+                   c.getInt(4),
+                   c.getInt(5),
+                   c.getString(6)
+               )
+           }
+       }catch (e: Exception){
+           e.printStackTrace()
+       }finally {
+           c.close()
+           db.close()
+       }
+        return res
     }
 
 

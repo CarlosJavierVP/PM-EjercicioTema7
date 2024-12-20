@@ -9,8 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
 import com.example.ejt7.dataBase.dao.CineDAO
+import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityMapBinding
 import com.example.ejt7.models.Cine
+import com.example.ejt7.models.Ciudad
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -26,6 +28,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
 
     private lateinit var daoCine: CineDAO
+    private lateinit var daoPeli: PeliculaDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +41,33 @@ class MapActivity : AppCompatActivity() {
         val mapController = map.controller
         mapController.setZoom(9.5)
 
-
-
         val idPeli = intent.getIntExtra("ID",0)
         val tituloPeli = intent.getStringExtra("TITULO")
-        daoCine.relacionPeliCine(this,idPeli)
-        //implementar findById de cara a sacar el cine, y luego pintarlo en el mapa
+
+        val peli = daoPeli.findMovieById(this,idPeli)
+
+        //val cines: List<Int> = daoCine.PeliCine(this, idPeli)
+
+        peli?.let {
+            val cines: List<Int> = daoCine.PeliCine(this, it.id)
+            cines.forEach { id ->
+                val cine = daoCine.findById(this,id)
+                val latitudLongitud = GeoPoint(cine.latitud, cine.longitud)
+                val marker = Marker(map)
+                marker.position = latitudLongitud
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                marker.title = cine.ciudad.toString()
+                map.overlays.add(marker)
+            }
+        }
 
 
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
             OverlayItem(
+                //Ciudad
+                //Nombre de cine
+                //coordenadas
                 tituloPeli,
                 "Centro privado de FP",
                 GeoPoint(36.7194937132025, -4.365499010622804)

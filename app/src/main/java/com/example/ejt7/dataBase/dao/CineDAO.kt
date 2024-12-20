@@ -14,6 +14,7 @@ class CineDAO: DAO<Cine> {
 
         private const val SELECT_PELI_CINE_RELACION = "SELECT * FROM Pelicula_Cine WHERE peli_id = ?"
 
+        private const val SELECT_CINE_ID = "SELECT * FROM Cine WHERE id = ?"
     }
 
     override fun findAll(context: Context?): List<Cine> {
@@ -46,7 +47,7 @@ class CineDAO: DAO<Cine> {
         TODO("Not yet implemented")
     }
 
-    fun relacionPeliCine(context: Context?, id: Int): List<Int>{
+    fun PeliCine(context: Context?, id: Int): List<Int>{
         val listaRelacion: MutableList<Int> = mutableListOf()
         lateinit var db: SQLiteDatabase
         lateinit var c: Cursor
@@ -63,5 +64,31 @@ class CineDAO: DAO<Cine> {
             db.close()
         }
         return listaRelacion
+    }
+
+    fun findById(context: Context?, id:Int):Cine{
+        lateinit var res:Cine
+        lateinit var db:SQLiteDatabase
+        lateinit var c: Cursor
+        try {
+            db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            c = db.rawQuery(SELECT_CINE_ID, arrayOf(id.toString()))
+            if(c.moveToNext()){
+                res = Cine(
+                    c.getInt(0),
+                    c.getString(1),
+                    Ciudad.valueOf(c.getString(2)),
+                    c.getDouble(3),
+                    c.getDouble(4)
+                )
+            }
+
+        }catch (e: Exception){
+            e.printStackTrace()
+        }finally {
+            c.close()
+            db.close()
+        }
+        return res
     }
 }
