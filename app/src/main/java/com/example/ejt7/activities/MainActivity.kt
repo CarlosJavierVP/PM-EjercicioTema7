@@ -155,17 +155,11 @@ class MainActivity : AppCompatActivity() {
         adapter.updateList(listaPeliculas)
     }
 
-/*
+
     private fun recarga(){
-        listaPeliculas = cargarLista()
-        adapter.notifyItemRangeInserted(0,listaPeliculas.size)
-        binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
-            onItemSelected(pelicula)
-        }
+        listaPeliculas = miDAO.findAll(this)
+        adapter.updateList(listaPeliculas)
     }
-
- */
-
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val movieSelected: Pelicula = listaPeliculas[item.groupId]
