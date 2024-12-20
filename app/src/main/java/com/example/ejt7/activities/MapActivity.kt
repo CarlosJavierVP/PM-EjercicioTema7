@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
@@ -48,7 +49,7 @@ class MapActivity : AppCompatActivity() {
 
         //val cines: List<Int> = daoCine.PeliCine(this, idPeli)
 
-        peli?.let {
+        peli.let {
             val cines: List<Int> = daoCine.PeliCine(this, it.id)
             cines.forEach { id ->
                 val cine = daoCine.findById(this,id)
@@ -56,7 +57,9 @@ class MapActivity : AppCompatActivity() {
                 val marker = Marker(map)
                 marker.position = latitudLongitud
                 marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                marker.title = cine.ciudad.toString()
+                val info: String = cine.ciudad.toString()+"'\n' "+cine.nombreCine
+                marker.title = info
+                marker.icon = ContextCompat.getDrawable(this, peli.poster)
                 map.overlays.add(marker)
             }
         }
