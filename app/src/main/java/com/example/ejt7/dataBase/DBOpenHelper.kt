@@ -3,8 +3,12 @@ package com.example.ejt7.dataBase
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.example.ejt7.R
+import com.example.ejt7.contract.CineContract
 import com.example.ejt7.contract.PeliculaContract
+import com.example.ejt7.models.Cine
+import com.example.ejt7.models.Ciudad
 import com.example.ejt7.models.Pelicula
 
 
@@ -32,9 +36,15 @@ class DBOpenHelper private constructor(context: Context?):
                             +",${PeliculaContract.Companion.Entrada.YEARCOL} int NOT NULL"
                             +",${PeliculaContract.Companion.Entrada.COUNTRYCOL} VARCHAR(20) NOT NULL)"
                 )
+                p0.execSQL("CREATE TABLE ${CineContract.Entrada.TABLA}"
+                                    +"(${CineContract.Entrada.ID} INTEGER PRIMARY KEY"
+                                    +",${CineContract.Entrada.NOMBRE} VARCHAR(50)"
+                                    +",${CineContract.Entrada.CIUDAD} VARCHAR(50)"
+                                    +",${CineContract.Entrada.LATITUD} REAL"
+                                    +",${CineContract.Entrada.LATITUD} REAL)")
+                p0.execSQL("CREATE TABLE Pelicula_Cine(peli_id INTEGER, cine_id INTEGER);")
                 inicializarBBDD(p0)
             }
-
         }catch (e: Exception){
             e.printStackTrace()
         }
@@ -48,8 +58,12 @@ class DBOpenHelper private constructor(context: Context?):
     }
 
     private fun inicializarBBDD(db: SQLiteDatabase){
-        val lista = cargarPeliculas()
-        for (peli in lista){
+        val listaPeliculas = cargarPeliculas()
+        val listaCines = cargarCines()
+        listaPeliculas.forEach { addMovie(db, it) }
+
+
+        for (peli in listaPeliculas){
             db.execSQL(
                 ("INSERT INTO ${PeliculaContract.Companion.Entrada.TABLA}("+
                         "${PeliculaContract.Companion.Entrada.TITULOCOL},"+
@@ -61,6 +75,30 @@ class DBOpenHelper private constructor(context: Context?):
                         " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
             )
         }
+    }
+
+    private fun addMovie(db: SQLiteDatabase, peli: Pelicula){
+        db.execSQL(
+            ("INSERT INTO ${PeliculaContract.Companion.Entrada.TABLA}("+
+                    "${PeliculaContract.Companion.Entrada.TITULOCOL},"+
+                    "${PeliculaContract.Companion.Entrada.DESCRIPCIONCOLC},"+
+                    "${PeliculaContract.Companion.Entrada.POSTERCOL},"+
+                    "${PeliculaContract.Companion.Entrada.TIMECOL},"+
+                    "${PeliculaContract.Companion.Entrada.YEARCOL},"+
+                    "${PeliculaContract.Companion.Entrada.COUNTRYCOL})"+
+                    " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
+        )
+    }
+
+    private fun addCine(db: SQLiteDatabase, cine: Cine){
+        db.execSQL(
+            ("INSERT INTO ${CineContract.Entrada.TABLA}("+
+                    "${CineContract.Entrada.NOMBRE},"+
+                    "${CineContract.Entrada.CIUDAD},"+
+                    "${CineContract.Entrada.LATITUD},"+
+                    "${CineContract.Entrada.LONGITUD})"+
+                    " VALUES ('${cine.nombreCine}','${cine.ciudad}','${cine.latitud}','${cine.longitud}');")
+        )
     }
 
     private fun cargarPeliculas(): MutableList<Pelicula>{
@@ -121,6 +159,25 @@ class DBOpenHelper private constructor(context: Context?):
             )
         )
     }
+
+    private fun cargarCines(): MutableList<Cine> = mutableListOf(
+        Cine(1,"Yelmo Plaza Mayor", Ciudad.Malaga, 36.657008541619696, -4.479436545364441),
+        Cine(2, "Multicines Rosaleda", Ciudad.Malaga, 36.734400561026256, -4.430879285310845),
+        Cine(3,"Yelmo Premium Lagoh", Ciudad.Sevilla, 37.342737154311536, -5.9807750892942195),
+        Cine(4,"CINESA CAMAS", Ciudad.Sevilla, 37.3940780517548, -6.022246565874445),
+        Cine(5, "Cines Axion", Ciudad.Cordoba, 37.87981038268583, -4.759757674924729),
+        Cine(6, "Cine Delicias", Ciudad.Cordoba, 37.89143084391786, -4.762211615196308),
+        Cine(7, "Yelmo Luxury Palafox", Ciudad.Madrid, 40.43105039331717, -3.6979526007704324),
+        Cine(8, "Capitol Gran Via", Ciudad.Madrid, 40.42093615504402, -3.7083801550820104),
+        Cine(9,"Cines Babel", Ciudad.Valencia, 39.473570437703515, -0.34953625577332254),
+        Cine(10, "Yelmo Campanar", Ciudad.Valencia, 39.47420075502282, -0.3981217956135429),
+        Cine(11, "Filmax Gran Via", Ciudad.Barcelona, 41.36155957214645, 2.134278325373307),
+        Cine(12, "Yelmo Westfield La Maquinista", Ciudad.Barcelona, 41.44029997978995, 2.201834975278853),
+        Cine(13,"Ocine Premium Los Fresnos", Ciudad.Gijon, 43.53373646323169, -5.6582220204697435),
+        Cine(14, "Yelmo Ocimax", Ciudad.Gijon, 43.536778022943224, -5.690641601795603),
+        Cine(15, "Cine Alcazar", Ciudad.Pamplona, 42.81474593421737, -1.639394371850273),
+        Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
+    )
 
 
 }
