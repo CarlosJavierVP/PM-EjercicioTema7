@@ -2,6 +2,7 @@ package com.example.ejt7.dataBase.dao
 
 import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import com.example.ejt7.dataBase.DBOpenHelper
 import com.example.ejt7.models.Cine
 import com.example.ejt7.models.Ciudad
@@ -10,6 +11,8 @@ class CineDAO: DAO<Cine> {
 
     companion object{
         private const val SELECT_ALl_CINEMA = "SELECT * FROM Cine"
+
+        private const val SELECT_PELI_CINE_RELACION = "SELECT * FROM Pelicula_Cine WHERE peli_id = ?"
 
     }
 
@@ -41,5 +44,24 @@ class CineDAO: DAO<Cine> {
 
     override fun save(context: Context?, t: Cine) {
         TODO("Not yet implemented")
+    }
+
+    fun relacionPeliCine(context: Context?, id: Int): List<Int>{
+        val listaRelacion: MutableList<Int> = mutableListOf()
+        lateinit var db: SQLiteDatabase
+        lateinit var c: Cursor
+        try{
+            db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            c = db.rawQuery(SELECT_PELI_CINE_RELACION, arrayOf(id.toString()))
+            while (c.moveToNext()){
+                listaRelacion.add(c.getInt(1))
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+        }finally {
+            c.close()
+            db.close()
+        }
+        return listaRelacion
     }
 }

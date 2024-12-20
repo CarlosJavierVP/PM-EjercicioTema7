@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
+import com.example.ejt7.dataBase.dao.CineDAO
 import com.example.ejt7.databinding.ActivityMapBinding
+import com.example.ejt7.models.Cine
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -23,6 +25,8 @@ class MapActivity : AppCompatActivity() {
     private lateinit var map: MapView
     private lateinit var binding: ActivityMapBinding
 
+    private lateinit var daoCine: CineDAO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Configuration.getInstance().load(applicationContext, this.getPreferences(Context.MODE_PRIVATE))
@@ -33,10 +37,19 @@ class MapActivity : AppCompatActivity() {
         map.setMultiTouchControls(true)
         val mapController = map.controller
         mapController.setZoom(9.5)
+
+
+
+        val idPeli = intent.getIntExtra("ID",0)
+        val tituloPeli = intent.getStringExtra("TITULO")
+        daoCine.relacionPeliCine(this,idPeli)
+        //implementar findById de cara a sacar el cine, y luego pintarlo en el mapa
+
+
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
             OverlayItem(
-                "CESUR Málaga Este",
+                tituloPeli,
                 "Centro privado de FP",
                 GeoPoint(36.7194937132025, -4.365499010622804)
             )
