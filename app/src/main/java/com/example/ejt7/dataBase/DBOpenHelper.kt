@@ -3,7 +3,6 @@ package com.example.ejt7.dataBase
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import com.example.ejt7.R
 import com.example.ejt7.contract.CineContract
 import com.example.ejt7.contract.PeliculaContract

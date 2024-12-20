@@ -2,6 +2,7 @@ package com.example.ejt7.activities
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -14,6 +15,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.ItemizedIconOverlay
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.OverlayItem
 
 class MapActivity : AppCompatActivity() {
@@ -66,4 +68,5 @@ class MapActivity : AppCompatActivity() {
         super.onPause()
         map.onPause()
     }
+
 }

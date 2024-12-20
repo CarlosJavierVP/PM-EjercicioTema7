@@ -7,7 +7,7 @@ import com.example.ejt7.models.Pelicula
 
 class PeliculaDAO():DAO<Pelicula> {
     override fun findAll(context: Context?): MutableList<Pelicula> {
-        var lista = mutableListOf<Pelicula>()
+        lateinit var lista: MutableList<Pelicula>
         lateinit var c: Cursor
 
         try{
