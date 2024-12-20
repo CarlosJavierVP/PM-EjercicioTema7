@@ -16,8 +16,8 @@ import com.example.ejt7.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
     private lateinit var preferences: SharedPreferences
     private lateinit var binding: ActivityLoginBinding
-    private var email: String=""
-    private var password: String=""
+    private var email: String?=""
+    private var password: String?=""
     private var remember: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
         }
         this.title=getString(R.string.login)
         preferences = getSharedPreferences("app", MODE_PRIVATE)
-        setValues()
+        setPreferences()
         binding.btnLogin.setOnClickListener {
             val email = binding.emailEdt.text.toString()
             val password = binding.passwordEdt.text.toString()
@@ -43,17 +43,27 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun setValues(){
+    private fun setPreferences(){
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             binding.etEmail.editText?.setText(email)
             binding.etPassword.editText?.setText(password)
-            if (remember != null) {
-                binding.switch1.isChecked = remember
+            remember = preferences.getBoolean("remember", false)
+            binding.switch1.isChecked = remember
+            if (remember) {
+                if(preferences.contains("email")){
+                    email = preferences.getString("email", null)
+                    binding.emailEdt.setText(email)
+                }
+                if(preferences.contains("pass")){
+                    password = preferences.getString("pass", null)
+                    binding.passwordEdt.setText(password)
+                }
             }
         }
     }
     private fun savePreferences(email: String, password: String){
         val edit = preferences.edit()
+        edit.putBoolean("remember",binding.switch1.isChecked)
         if(binding.switch1.isChecked){
             edit.putString("email", email)
             edit.putString("password", password)

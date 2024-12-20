@@ -61,7 +61,7 @@ class MapActivity : AppCompatActivity() {
             }
         }
 
-
+        /*
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
             OverlayItem(
@@ -89,6 +89,8 @@ class MapActivity : AppCompatActivity() {
         mOverlay.setFocusItemsOnTap(true)
         map.getOverlays().add(mOverlay)
         mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
+
+         */
     }
 
     public override fun onResume(){
