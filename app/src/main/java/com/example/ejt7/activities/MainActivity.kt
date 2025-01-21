@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         listaPeliculas = miDAO.findAll(this)
         layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.layoutManager=layoutManager
-        this.adapter = PeliculaAdapter(listaPeliculas){pelicula ->
+        this.adapter = PeliculaAdapter(listaPeliculas) {pelicula ->
             onItemSelected(pelicula)
         }
         binding.rvPeliculas.adapter = this.adapter
@@ -230,9 +230,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun removeMovie(item: MenuItem, pelicula: Pelicula) {
         listaPeliculas = listaPeliculas.filter { it != pelicula }
-        miDAO.delete(this,pelicula)
+        miDAO.delete(this,pelicula.id)
         adapter.updateList(listaPeliculas)
-       listaVacia = listaPeliculas.isEmpty()
+        listaVacia = listaPeliculas.isEmpty()
     }
 
 

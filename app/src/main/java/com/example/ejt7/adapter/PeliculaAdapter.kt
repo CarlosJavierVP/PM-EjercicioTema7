@@ -9,16 +9,17 @@ import com.example.ejt7.R
 import com.example.ejt7.models.Pelicula
 import com.example.ejt7.utils.PeliculaDiffUtil
 
-class PeliculaAdapter(private var listaPeli: List<Pelicula>,
-                      private val onClickListener: (Pelicula)->Unit) : RecyclerView.Adapter<PeliculaViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeliculaViewHolder {
+class PeliculaAdapter(
+    private var listaPeli: List<Pelicula>,
+    private val onClickListener: (Pelicula)->Unit): RecyclerView.Adapter<PeliculaViewHolder>() {
+
+
+     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeliculaViewHolder {
         val layaoutInflater = LayoutInflater.from(parent.context)
         return PeliculaViewHolder(layaoutInflater.inflate(R.layout.item_pelicula, parent, false))
     }
 
-    override fun getItemCount(): Int {
-        return listaPeli.size
-    }
+    override fun getItemCount(): Int = listaPeli.size
 
     override fun onBindViewHolder(holder: PeliculaViewHolder, position: Int) {
         val item = listaPeli[position]

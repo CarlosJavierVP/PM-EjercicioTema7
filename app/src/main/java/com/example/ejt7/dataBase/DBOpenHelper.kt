@@ -22,10 +22,10 @@ class DBOpenHelper private constructor(context: Context?):
             }
         }
 
-    override fun onCreate(p0: SQLiteDatabase?) {
+    override fun onCreate(db: SQLiteDatabase?) {
         try {
-            if (p0 != null) {
-                p0.execSQL(
+            if (db != null) {
+                db.execSQL(
                     "CREATE TABLE ${PeliculaContract.Companion.Entrada.TABLA}"
                             +"(${PeliculaContract.Companion.Entrada.IDCOL} integer primary key"
                             +",${PeliculaContract.Companion.Entrada.TITULOCOL} VARCHAR(20) NOT NULL"
@@ -35,25 +35,28 @@ class DBOpenHelper private constructor(context: Context?):
                             +",${PeliculaContract.Companion.Entrada.YEARCOL} int NOT NULL"
                             +",${PeliculaContract.Companion.Entrada.COUNTRYCOL} VARCHAR(20) NOT NULL)"
                 )
-                p0.execSQL("CREATE TABLE ${CineContract.Entrada.TABLA}"
+                /*
+                db.execSQL("CREATE TABLE ${CineContract.Entrada.TABLA}"
                                     +"(${CineContract.Entrada.ID} INTEGER PRIMARY KEY"
                                     +",${CineContract.Entrada.NOMBRE} VARCHAR(50)"
                                     +",${CineContract.Entrada.CIUDAD} VARCHAR(50)"
                                     +",${CineContract.Entrada.LATITUD} REAL"
                                     +",${CineContract.Entrada.LATITUD} REAL)")
-                p0.execSQL("CREATE TABLE Pelicula_Cine(peli_id INTEGER, cine_id INTEGER);")
-                inicializarBBDD(p0)
+                db.execSQL("CREATE TABLE Pelicula_Cine(peli_id INTEGER, cine_id INTEGER);")
+
+                 */
+                inicializarBBDD(db)
             }
         }catch (e: Exception){
             e.printStackTrace()
         }
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        if (p0 != null) {
-            p0.execSQL("DROP TABLE IF EXISTS ${PeliculaContract.Companion.Entrada.TABLA};")
-            p0.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA}")
-            onCreate(p0)
+    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+        if (db != null) {
+            db.execSQL("DROP TABLE IF EXISTS ${PeliculaContract.Companion.Entrada.TABLA};")
+            //db.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA}")
+            onCreate(db)
         }
     }
 
@@ -61,8 +64,8 @@ class DBOpenHelper private constructor(context: Context?):
         val listaPeliculas = cargarPeliculas()
         val listaCines = cargarCines()
         listaPeliculas.forEach { addMovie(db, it) }
-        listaCines.forEach { addCine(db, it) }
-        relacionCinePeli(db)
+        //listaCines.forEach { addCine(db, it) }
+        //relacionCinePeli(db)
     }
 
     private fun addMovie(db: SQLiteDatabase, peli: Pelicula){
@@ -148,24 +151,26 @@ class DBOpenHelper private constructor(context: Context?):
         )
     }
 
-    private fun cargarCines(): MutableList<Cine> = mutableListOf(
-        Cine(1,"Yelmo Plaza Mayor", Ciudad.Malaga, 36.657008541619696, -4.479436545364441),
-        Cine(2, "Multicines Rosaleda", Ciudad.Malaga, 36.734400561026256, -4.430879285310845),
-        Cine(3,"Yelmo Premium Lagoh", Ciudad.Sevilla, 37.342737154311536, -5.9807750892942195),
-        Cine(4,"CINESA CAMAS", Ciudad.Sevilla, 37.3940780517548, -6.022246565874445),
-        Cine(5, "Cines Axion", Ciudad.Cordoba, 37.87981038268583, -4.759757674924729),
-        Cine(6, "Cine Delicias", Ciudad.Cordoba, 37.89143084391786, -4.762211615196308),
-        Cine(7, "Yelmo Luxury Palafox", Ciudad.Madrid, 40.43105039331717, -3.6979526007704324),
-        Cine(8, "Capitol Gran Via", Ciudad.Madrid, 40.42093615504402, -3.7083801550820104),
-        Cine(9,"Cines Babel", Ciudad.Valencia, 39.473570437703515, -0.34953625577332254),
-        Cine(10, "Yelmo Campanar", Ciudad.Valencia, 39.47420075502282, -0.3981217956135429),
-        Cine(11, "Filmax Gran Via", Ciudad.Barcelona, 41.36155957214645, 2.134278325373307),
-        Cine(12, "Yelmo Westfield La Maquinista", Ciudad.Barcelona, 41.44029997978995, 2.201834975278853),
-        Cine(13,"Ocine Premium Los Fresnos", Ciudad.Gijon, 43.53373646323169, -5.6582220204697435),
-        Cine(14, "Yelmo Ocimax", Ciudad.Gijon, 43.536778022943224, -5.690641601795603),
-        Cine(15, "Cine Alcazar", Ciudad.Pamplona, 42.81474593421737, -1.639394371850273),
-        Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
-    )
+    private fun cargarCines(): MutableList<Cine> {
+        return mutableListOf(
+            Cine(1,"Yelmo Plaza Mayor", Ciudad.Malaga, 36.657008541619696, -4.479436545364441),
+            Cine(2, "Multicines Rosaleda", Ciudad.Malaga, 36.734400561026256, -4.430879285310845),
+            Cine(3,"Yelmo Premium Lagoh", Ciudad.Sevilla, 37.342737154311536, -5.9807750892942195),
+            Cine(4,"CINESA CAMAS", Ciudad.Sevilla, 37.3940780517548, -6.022246565874445),
+            Cine(5, "Cines Axion", Ciudad.Cordoba, 37.87981038268583, -4.759757674924729),
+            Cine(6, "Cine Delicias", Ciudad.Cordoba, 37.89143084391786, -4.762211615196308),
+            Cine(7, "Yelmo Luxury Palafox", Ciudad.Madrid, 40.43105039331717, -3.6979526007704324),
+            Cine(8, "Capitol Gran Via", Ciudad.Madrid, 40.42093615504402, -3.7083801550820104),
+            Cine(9,"Cines Babel", Ciudad.Valencia, 39.473570437703515, -0.34953625577332254),
+            Cine(10, "Yelmo Campanar", Ciudad.Valencia, 39.47420075502282, -0.3981217956135429),
+            Cine(11, "Filmax Gran Via", Ciudad.Barcelona, 41.36155957214645, 2.134278325373307),
+            Cine(12, "Yelmo Westfield La Maquinista", Ciudad.Barcelona, 41.44029997978995, 2.201834975278853),
+            Cine(13,"Ocine Premium Los Fresnos", Ciudad.Gijon, 43.53373646323169, -5.6582220204697435),
+            Cine(14, "Yelmo Ocimax", Ciudad.Gijon, 43.536778022943224, -5.690641601795603),
+            Cine(15, "Cine Alcazar", Ciudad.Pamplona, 42.81474593421737, -1.639394371850273),
+            Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
+        )
+    }
 
     private fun randomCine(): Int{
         return cargarCines().random().id

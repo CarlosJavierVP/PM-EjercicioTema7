@@ -12,7 +12,7 @@ class PeliculaViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnCrea
     private val binding = ItemPeliculaBinding.bind(view)
     private lateinit var peli: Pelicula
 
-    fun render(item: Pelicula, onClickListener: (Pelicula) ->Unit){
+    fun render(item: Pelicula, onClickListener: (Pelicula) -> Unit){
         peli = item
         binding.tvTitle.text=item.title
         Glide.with(binding.ivPoster.context).load(item.poster).fitCenter().into(binding.ivPoster)

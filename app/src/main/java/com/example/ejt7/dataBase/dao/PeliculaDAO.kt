@@ -49,10 +49,10 @@ class PeliculaDAO():DAO<Pelicula> {
         db.close()
     }
 
-    override fun delete(context: Context?, pelicula: Pelicula){
+    override fun delete(context: Context?, idpelicula: Int){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
-            "DELETE FROM Pelicula WHERE id=${pelicula.id};"
+            "DELETE FROM Pelicula WHERE id=${idpelicula};"
         )
         db.close()
     }

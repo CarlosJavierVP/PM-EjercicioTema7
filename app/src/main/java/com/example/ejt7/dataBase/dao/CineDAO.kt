@@ -35,7 +35,7 @@ class CineDAO: DAO<Cine> {
         return listaCines
     }
 
-    override fun delete(context: Context?, t: Cine) {
+    override fun delete(context: Context?, t: Int) {
         TODO("Not yet implemented")
     }
 
