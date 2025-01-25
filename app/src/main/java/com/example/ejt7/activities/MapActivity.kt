@@ -29,7 +29,6 @@ class MapActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapBinding
 
     private lateinit var daoCine: CineDAO
-    private lateinit var daoPeli: PeliculaDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +45,36 @@ class MapActivity : AppCompatActivity() {
         val idPeli = intent.getIntExtra("ID",0)
         val tituloPeli = intent.getStringExtra("TITULO")
 
-        val peli = daoPeli.findMovieById(this,idPeli)
-
         val cines: List<Int> = daoCine.PeliCine(this, idPeli)
 
-        cines.forEach { it ->
-            //iterar la lista de id de los cines y sacar el cine completo, posteriormente añadirlos al overlayitem
+        cines.forEach { cineId ->
+            var cinema = daoCine.findById(this, cineId);
+
+            val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
+            items.add(
+
+                OverlayItem(
+                    cinema.ciudad.toString(),
+                    cinema.nombreCine + " - "+tituloPeli,
+                    GeoPoint(cinema.latitud, cinema.longitud)
+                )
+            )
+
+            val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
+                items,
+                object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
+                    override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
+                        return true
+                    }
+
+                    override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
+                        return false
+                    }
+                }, applicationContext
+            )
+            mOverlay.setFocusItemsOnTap(true)
+            map.getOverlays().add(mOverlay)
+            mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
         }
 /*
         peli.let {
@@ -70,8 +93,7 @@ class MapActivity : AppCompatActivity() {
         }
 
          */
-
-
+        /*
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
 
@@ -97,6 +119,8 @@ class MapActivity : AppCompatActivity() {
         mOverlay.setFocusItemsOnTap(true)
         map.getOverlays().add(mOverlay)
         mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
+
+         */
 
 
     }
