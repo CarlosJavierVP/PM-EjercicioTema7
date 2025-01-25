@@ -43,64 +43,33 @@ class MapActivity : AppCompatActivity() {
         val mapController = map.controller
         mapController.setZoom(9.5)
 
-
         val idPeli = intent.getIntExtra("ID",0)
-        //val tituloPeli = intent.getStringExtra("TITULO")
-        val peli = daoPeli.findMovieById(this, idPeli)
 
-        val cines: List<Int> = daoCine.PeliCine(this, idPeli)
+        val peli = daoPeli.findMovieById(this,idPeli)
+        val cines = daoCine.findByMovie(this, peli)
 
-        /*
-        cines.forEach { cineId ->
-            var cinema = daoCine.findById(this, cineId);
-            addMarker(cinema)
-        }
 
-         */
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
-        cines.forEach { id ->
-            val cine = daoCine.findById(this,id)
-            val latitudLongitud = GeoPoint(cine.latitud, cine.longitud)
-            val marker = Marker(map)
-            val info: String = cine.ciudad.toString()
-            marker.title = info
+        cines.forEach { c: Cine ->
             items.add(
                 OverlayItem(
-                    marker.title,
-                    cine.nombreCine+" - "+peli.title,
-                    latitudLongitud
+                    c.ciudad.toString(),
+                    c.nombreCine+" - "+peli.title,
+                    GeoPoint(c.latitud, c.longitud)
                 )
             )
         }
-
-        val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
-            items,
-            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
-                override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
-                    return true
-                }
-
-                override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
-                    return false
-                }
-            }, applicationContext
-        )
-        mOverlay.setFocusItemsOnTap(true)
-        map.getOverlays().add(mOverlay)
-        mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
-
-
         /*
-        val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
-
             OverlayItem(
-                "",
+                "CESUR Málaga Este",
                 "Centro privado de FP",
                 GeoPoint(36.7194937132025, -4.365499010622804)
             )
         )
 
+         */
+
         val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
             items,
             object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
@@ -117,17 +86,14 @@ class MapActivity : AppCompatActivity() {
         map.getOverlays().add(mOverlay)
         mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
 
-         */
-
 
     }
     private fun addMarker(cine: Cine){
-        val latitudLongitud = GeoPoint(cine.latitud, cine.longitud)
         val marker = Marker(map)
-        marker.position = latitudLongitud
+        marker.position = GeoPoint(cine.latitud, cine.longitud)
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        val info: String = cine.ciudad.toString()+" '\n' "+cine.nombreCine + " - "//+peli.title
-        marker.title = info
+        //val info: String = cine.ciudad.toString()+" '\n' "+cine.nombreCine + " - "//+peli.title
+        marker.title = cine.ciudad.toString()+" '\n' "+cine.nombreCine
         //marker.icon = ContextCompat.getDrawable(this, peli.poster)
         map.overlays.add(marker)
 

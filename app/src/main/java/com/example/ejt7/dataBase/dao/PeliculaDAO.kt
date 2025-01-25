@@ -69,7 +69,7 @@ class PeliculaDAO():DAO<Pelicula> {
        lateinit var c: Cursor
        try {
            db = DBOpenHelper.getInstance(context)!!.readableDatabase
-           c = db.rawQuery("SELECT * FROM Pelicula WHERE id = ?",null)
+           c = db.rawQuery("SELECT * FROM Pelicula WHERE id = ?", arrayOf(id.toString()))
            if(c.moveToNext()){
                res = Pelicula(
                    c.getInt(0),

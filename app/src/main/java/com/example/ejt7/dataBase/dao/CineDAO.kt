@@ -3,9 +3,11 @@ package com.example.ejt7.dataBase.dao
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.example.ejt7.contract.PeliculaCineContract
 import com.example.ejt7.dataBase.DBOpenHelper
 import com.example.ejt7.models.Cine
 import com.example.ejt7.models.Ciudad
+import com.example.ejt7.models.Pelicula
 
 class CineDAO: DAO<Cine> {
 
@@ -16,6 +18,8 @@ class CineDAO: DAO<Cine> {
 
         private const val SELECT_CINE_ID = "SELECT * FROM Cine WHERE id = ?"
     }
+
+
 
     override fun findAll(context: Context?): List<Cine> {
         val listaCines: MutableList<Cine> = mutableListOf()
@@ -64,6 +68,37 @@ class CineDAO: DAO<Cine> {
             db.close()
         }
         return listaRelacion
+    }
+
+    //MODIFICAR DAO --> ARREGLAR MÉTODOS PARA OBTENER LOS DATOS DE LA DB Y PODER PINTARLOS
+    fun findByMovie(context: Context?, peli:Pelicula):List<Cine>{
+        val listaCines: MutableList<Cine> = mutableListOf()
+        //lateinit var c: Cursor
+        lateinit var c1: Cursor
+        try {
+            val db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            val columnas = arrayOf(
+                PeliculaCineContract.Companion.EntradaPeli.IDCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,
+                PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC,
+                PeliculaCineContract.Companion.EntradaPeli.POSTERCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TIMECOL,
+                PeliculaCineContract.Companion.EntradaPeli.YEARCOL,
+                PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL
+            )
+            //c = db.rawQuery("SELECT * FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id", arrayOf(peli.id.toString()))
+            c1 = db.query(PeliculaCineContract.Companion.EntradaCine.TABLA, columnas, null, null,null,null,null)
+            while(c1.moveToNext()){
+                val cinema = Cine(c1.getInt(0),c1.getString(1), Ciudad.valueOf(c1.getString(2)),c1.getDouble(3), c1.getDouble(4))
+                listaCines.add(cinema)
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+        }finally {
+            c1.close()
+        }
+        return listaCines
+
     }
 
 
