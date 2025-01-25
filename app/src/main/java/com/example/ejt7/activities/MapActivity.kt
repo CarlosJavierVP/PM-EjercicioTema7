@@ -42,13 +42,18 @@ class MapActivity : AppCompatActivity() {
         val mapController = map.controller
         mapController.setZoom(9.5)
 
+
         val idPeli = intent.getIntExtra("ID",0)
         val tituloPeli = intent.getStringExtra("TITULO")
 
         val peli = daoPeli.findMovieById(this,idPeli)
 
-        //val cines: List<Int> = daoCine.PeliCine(this, idPeli)
+        val cines: List<Int> = daoCine.PeliCine(this, idPeli)
 
+        cines.forEach { it ->
+            //iterar la lista de id de los cines y sacar el cine completo, posteriormente añadirlos al overlayitem
+        }
+/*
         peli.let {
             val cines: List<Int> = daoCine.PeliCine(this, it.id)
             cines.forEach { id ->
@@ -64,14 +69,14 @@ class MapActivity : AppCompatActivity() {
             }
         }
 
-        /*
+         */
+
+
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
         items.add(
+
             OverlayItem(
-                //Ciudad
-                //Nombre de cine
-                //coordenadas
-                tituloPeli,
+                "",
                 "Centro privado de FP",
                 GeoPoint(36.7194937132025, -4.365499010622804)
             )
@@ -92,8 +97,6 @@ class MapActivity : AppCompatActivity() {
         mOverlay.setFocusItemsOnTap(true)
         map.getOverlays().add(mOverlay)
         mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
-
-         */
 
 
     }

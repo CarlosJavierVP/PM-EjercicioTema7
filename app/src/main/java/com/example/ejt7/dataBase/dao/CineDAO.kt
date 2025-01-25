@@ -12,7 +12,7 @@ class CineDAO: DAO<Cine> {
     companion object{
         private const val SELECT_ALl_CINEMA = "SELECT * FROM Cine"
 
-        private const val SELECT_PELI_CINE_RELACION = "SELECT * FROM Pelicula_Cine WHERE peli_id = ?"
+        private const val SELECT_PELI_CINE_RELACION = "SELECT id_cine FROM Relacion WHERE id_peli = ?"
 
         private const val SELECT_CINE_ID = "SELECT * FROM Cine WHERE id = ?"
     }
@@ -65,6 +65,7 @@ class CineDAO: DAO<Cine> {
         }
         return listaRelacion
     }
+
 
     fun findById(context: Context?, id:Int):Cine{
         lateinit var res:Cine
