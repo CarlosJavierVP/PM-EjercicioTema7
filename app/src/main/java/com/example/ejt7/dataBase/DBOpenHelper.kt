@@ -4,15 +4,14 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.ejt7.R
-import com.example.ejt7.contract.CineContract
-import com.example.ejt7.contract.PeliculaContract
+import com.example.ejt7.contract.PeliculaCineContract
 import com.example.ejt7.models.Cine
 import com.example.ejt7.models.Ciudad
 import com.example.ejt7.models.Pelicula
 
 
 class DBOpenHelper private constructor(context: Context?):
-    SQLiteOpenHelper(context, PeliculaContract.NOMBRE_BD, null, PeliculaContract.VERSION){
+    SQLiteOpenHelper(context, PeliculaCineContract.NOMBRE_BD, null, PeliculaCineContract.VERSION){
 
         companion object{
             private var dbOpen: DBOpenHelper? = null
@@ -22,74 +21,75 @@ class DBOpenHelper private constructor(context: Context?):
             }
         }
 
-    override fun onCreate(db: SQLiteDatabase?) {
+    override fun onCreate(p0: SQLiteDatabase?) {
         try {
-            if (db != null) {
-                db.execSQL(
-                    "CREATE TABLE ${PeliculaContract.Companion.Entrada.TABLA}"
-                            +"(${PeliculaContract.Companion.Entrada.IDCOL} integer primary key"
-                            +",${PeliculaContract.Companion.Entrada.TITULOCOL} VARCHAR(20) NOT NULL"
-                            +",${PeliculaContract.Companion.Entrada.DESCRIPCIONCOLC} VARCHAR(70) NOT NULL"
-                            +",${PeliculaContract.Companion.Entrada.POSTERCOL} int NOT NULL"
-                            +",${PeliculaContract.Companion.Entrada.TIMECOL} int NOT NULL"
-                            +",${PeliculaContract.Companion.Entrada.YEARCOL} int NOT NULL"
-                            +",${PeliculaContract.Companion.Entrada.COUNTRYCOL} VARCHAR(20) NOT NULL)"
+            if (p0 != null) {
+                p0.execSQL(
+                    "CREATE TABLE ${PeliculaCineContract.Companion.EntradaPeli.TABLA}"
+                            +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} integer primary key"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL} VARCHAR(20) NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC} VARCHAR(70) NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL} int NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.TIMECOL} int NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.YEARCOL} int NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL} VARCHAR(20) NOT NULL)"
                 )
-
-                db.execSQL("CREATE TABLE ${CineContract.Entrada.TABLA}"
-                                    +"(${CineContract.Entrada.ID} INTEGER PRIMARY KEY"
-                                    +",${CineContract.Entrada.NOMBRE} VARCHAR(50)"
-                                    +",${CineContract.Entrada.CIUDAD} VARCHAR(50)"
-                                    +",${CineContract.Entrada.LATITUD} REAL"
-                                    +",${CineContract.Entrada.LONGITUD} REAL)")
-                db.execSQL("CREATE TABLE Pelicula_Cine(peli_id INTEGER, cine_id INTEGER);")
-
-
-                inicializarBBDD(db)
+                p0.execSQL("CREATE TABLE ${PeliculaCineContract.Companion.EntradaCine.TABLA}"
+                        +"(${PeliculaCineContract.Companion.EntradaCine.ID} Integer primary key"
+                        +",${PeliculaCineContract.Companion.EntradaCine.NOMBRE} VARCHAR(50)"
+                        +",${PeliculaCineContract.Companion.EntradaCine.CIUDAD} VARCHAR(50)"
+                        +",${PeliculaCineContract.Companion.EntradaCine.LATITUD} Double"
+                        +",${PeliculaCineContract.Companion.EntradaCine.LONGITUD} Double)"
+                )
+                p0.execSQL("CREATE TABLE ${PeliculaCineContract.Companion.EntradaRelacion.TABLA}"
+                    +"(${PeliculaCineContract.Companion.EntradaRelacion.ID} Integer primary key"
+                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_PELI} Integer NOT NULL"
+                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_CINE} Integer NOT NULL)"
+                )
+                inicializarBBDD(p0)
             }
+
         }catch (e: Exception){
             e.printStackTrace()
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
-        if (db != null) {
-            db.execSQL("DROP TABLE IF EXISTS ${PeliculaContract.Companion.Entrada.TABLA};")
-            db.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA};")
-            onCreate(db)
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+        if (p0 != null) {
+            p0.execSQL("DROP TABLE IF EXISTS ${PeliculaCineContract.Companion.EntradaPeli.TABLA};")
+            p0.execSQL("DROP TABLE IF EXISTS ${PeliculaCineContract.Companion.EntradaCine.TABLA};")
+            p0.execSQL("DROP TABLE IF EXISTS ${PeliculaCineContract.Companion.EntradaRelacion.TABLA};")
+            onCreate(p0)
         }
     }
 
     private fun inicializarBBDD(db: SQLiteDatabase){
-        val listaPeliculas = cargarPeliculas()
-        val listaCines = cargarCines()
-        listaPeliculas.forEach { addMovie(db, it) }
-        listaCines.forEach { addCine(db, it) }
+        val listaPeli = cargarPeliculas()
+        val listaCine = cargarCines()
+        for (peli in listaPeli){
+            db.execSQL(
+                ("INSERT INTO ${PeliculaCineContract.Companion.EntradaPeli.TABLA}("+
+                        "${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.TIMECOL},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.YEARCOL},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL})"+
+                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
+            )
+        }
+        for (cine in listaCine){
+            db.execSQL(
+                ("INSERT INTO ${PeliculaCineContract.Companion.EntradaCine.TABLA}("+
+                        "${PeliculaCineContract.Companion.EntradaCine.NOMBRE},"+
+                        "${PeliculaCineContract.Companion.EntradaCine.CIUDAD},"+
+                        "${PeliculaCineContract.Companion.EntradaCine.LATITUD},"+
+                        "${PeliculaCineContract.Companion.EntradaCine.LONGITUD})"+
+                        " VALUES ('${cine.nombreCine}','${cine.ciudad}','${cine.latitud}','${cine.longitud}');")
+            )
+        }
+
         relacionCinePeli(db)
-    }
-
-    private fun addMovie(db: SQLiteDatabase, peli: Pelicula){
-        db.execSQL(
-            ("INSERT INTO ${PeliculaContract.Companion.Entrada.TABLA}("+
-                    "${PeliculaContract.Companion.Entrada.TITULOCOL},"+
-                    "${PeliculaContract.Companion.Entrada.DESCRIPCIONCOLC},"+
-                    "${PeliculaContract.Companion.Entrada.POSTERCOL},"+
-                    "${PeliculaContract.Companion.Entrada.TIMECOL},"+
-                    "${PeliculaContract.Companion.Entrada.YEARCOL},"+
-                    "${PeliculaContract.Companion.Entrada.COUNTRYCOL})"+
-                    " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
-        )
-    }
-
-    private fun addCine(db: SQLiteDatabase, cine: Cine){
-        db.execSQL(
-            ("INSERT INTO ${CineContract.Entrada.TABLA}("+
-                    "${CineContract.Entrada.NOMBRE},"+
-                    "${CineContract.Entrada.CIUDAD},"+
-                    "${CineContract.Entrada.LATITUD},"+
-                    "${CineContract.Entrada.LONGITUD})"+
-                    " VALUES ('${cine.nombreCine}','${cine.ciudad}','${cine.latitud}','${cine.longitud}');")
-        )
     }
 
     private fun cargarPeliculas(): MutableList<Pelicula>{
@@ -151,26 +151,24 @@ class DBOpenHelper private constructor(context: Context?):
         )
     }
 
-    private fun cargarCines(): MutableList<Cine> {
-        return mutableListOf(
-            Cine(1,"Yelmo Plaza Mayor", Ciudad.Malaga, 36.657008541619696, -4.479436545364441),
-            Cine(2, "Multicines Rosaleda", Ciudad.Malaga, 36.734400561026256, -4.430879285310845),
-            Cine(3,"Yelmo Premium Lagoh", Ciudad.Sevilla, 37.342737154311536, -5.9807750892942195),
-            Cine(4,"CINESA CAMAS", Ciudad.Sevilla, 37.3940780517548, -6.022246565874445),
-            Cine(5, "Cines Axion", Ciudad.Cordoba, 37.87981038268583, -4.759757674924729),
-            Cine(6, "Cine Delicias", Ciudad.Cordoba, 37.89143084391786, -4.762211615196308),
-            Cine(7, "Yelmo Luxury Palafox", Ciudad.Madrid, 40.43105039331717, -3.6979526007704324),
-            Cine(8, "Capitol Gran Via", Ciudad.Madrid, 40.42093615504402, -3.7083801550820104),
-            Cine(9,"Cines Babel", Ciudad.Valencia, 39.473570437703515, -0.34953625577332254),
-            Cine(10, "Yelmo Campanar", Ciudad.Valencia, 39.47420075502282, -0.3981217956135429),
-            Cine(11, "Filmax Gran Via", Ciudad.Barcelona, 41.36155957214645, 2.134278325373307),
-            Cine(12, "Yelmo Westfield La Maquinista", Ciudad.Barcelona, 41.44029997978995, 2.201834975278853),
-            Cine(13,"Ocine Premium Los Fresnos", Ciudad.Gijon, 43.53373646323169, -5.6582220204697435),
-            Cine(14, "Yelmo Ocimax", Ciudad.Gijon, 43.536778022943224, -5.690641601795603),
-            Cine(15, "Cine Alcazar", Ciudad.Pamplona, 42.81474593421737, -1.639394371850273),
-            Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
-        )
-    }
+    private fun cargarCines(): MutableList<Cine> = mutableListOf(
+        Cine(1,"Yelmo Plaza Mayor", Ciudad.Malaga, 36.657008541619696, -4.479436545364441),
+        Cine(2, "Multicines Rosaleda", Ciudad.Malaga, 36.734400561026256, -4.430879285310845),
+        Cine(3,"Yelmo Premium Lagoh", Ciudad.Sevilla, 37.342737154311536, -5.9807750892942195),
+        Cine(4,"CINESA CAMAS", Ciudad.Sevilla, 37.3940780517548, -6.022246565874445),
+        Cine(5, "Cines Axion", Ciudad.Cordoba, 37.87981038268583, -4.759757674924729),
+        Cine(6, "Cine Delicias", Ciudad.Cordoba, 37.89143084391786, -4.762211615196308),
+        Cine(7, "Yelmo Luxury Palafox", Ciudad.Madrid, 40.43105039331717, -3.6979526007704324),
+        Cine(8, "Capitol Gran Via", Ciudad.Madrid, 40.42093615504402, -3.7083801550820104),
+        Cine(9,"Cines Babel", Ciudad.Valencia, 39.473570437703515, -0.34953625577332254),
+        Cine(10, "Yelmo Campanar", Ciudad.Valencia, 39.47420075502282, -0.3981217956135429),
+        Cine(11, "Filmax Gran Via", Ciudad.Barcelona, 41.36155957214645, 2.134278325373307),
+        Cine(12, "Yelmo Westfield La Maquinista", Ciudad.Barcelona, 41.44029997978995, 2.201834975278853),
+        Cine(13,"Ocine Premium Los Fresnos", Ciudad.Gijon, 43.53373646323169, -5.6582220204697435),
+        Cine(14, "Yelmo Ocimax", Ciudad.Gijon, 43.536778022943224, -5.690641601795603),
+        Cine(15, "Cine Alcazar", Ciudad.Pamplona, 42.81474593421737, -1.639394371850273),
+        Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
+    )
 
     private fun randomCine(): Int{
         return cargarCines().random().id
@@ -183,11 +181,16 @@ class DBOpenHelper private constructor(context: Context?):
             while (cineSeleccionado.size < 5){
                 val idRandom = randomCine()
                 if(!cineSeleccionado.contains(idRandom)){
-                    db.execSQL("INSERT INTO Pelicula_Cine(peli_id, cine_id) values (${pelicula.id}, ${idRandom})")
+                    db.execSQL("INSERT INTO ${PeliculaCineContract.Companion.EntradaRelacion.TABLA}("+
+                            "${PeliculaCineContract.Companion.EntradaRelacion.ID_PELI},"+
+                            "${PeliculaCineContract.Companion.EntradaRelacion.ID_CINE})"+
+                            " VALUES ('${pelicula.id}','${idRandom}');")
                     cineSeleccionado.add(idRandom)
                 }
             }
         }
     }
+
+
 
 }
