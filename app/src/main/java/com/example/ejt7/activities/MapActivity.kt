@@ -94,6 +94,8 @@ class MapActivity : AppCompatActivity() {
         mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
 
          */
+
+
     }
 
     public override fun onResume(){

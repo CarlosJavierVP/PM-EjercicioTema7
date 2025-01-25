@@ -35,16 +35,16 @@ class DBOpenHelper private constructor(context: Context?):
                             +",${PeliculaContract.Companion.Entrada.YEARCOL} int NOT NULL"
                             +",${PeliculaContract.Companion.Entrada.COUNTRYCOL} VARCHAR(20) NOT NULL)"
                 )
-                /*
+
                 db.execSQL("CREATE TABLE ${CineContract.Entrada.TABLA}"
                                     +"(${CineContract.Entrada.ID} INTEGER PRIMARY KEY"
                                     +",${CineContract.Entrada.NOMBRE} VARCHAR(50)"
                                     +",${CineContract.Entrada.CIUDAD} VARCHAR(50)"
                                     +",${CineContract.Entrada.LATITUD} REAL"
-                                    +",${CineContract.Entrada.LATITUD} REAL)")
+                                    +",${CineContract.Entrada.LONGITUD} REAL)")
                 db.execSQL("CREATE TABLE Pelicula_Cine(peli_id INTEGER, cine_id INTEGER);")
 
-                 */
+
                 inicializarBBDD(db)
             }
         }catch (e: Exception){
@@ -55,7 +55,7 @@ class DBOpenHelper private constructor(context: Context?):
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         if (db != null) {
             db.execSQL("DROP TABLE IF EXISTS ${PeliculaContract.Companion.Entrada.TABLA};")
-            //db.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA}")
+            db.execSQL("DROP TABLE IF EXISTS ${CineContract.Entrada.TABLA};")
             onCreate(db)
         }
     }
@@ -64,8 +64,8 @@ class DBOpenHelper private constructor(context: Context?):
         val listaPeliculas = cargarPeliculas()
         val listaCines = cargarCines()
         listaPeliculas.forEach { addMovie(db, it) }
-        //listaCines.forEach { addCine(db, it) }
-        //relacionCinePeli(db)
+        listaCines.forEach { addCine(db, it) }
+        relacionCinePeli(db)
     }
 
     private fun addMovie(db: SQLiteDatabase, peli: Pelicula){
