@@ -70,27 +70,14 @@ class CineDAO: DAO<Cine> {
         return listaRelacion
     }
 
-    //MODIFICAR DAO --> ARREGLAR MÉTODOS PARA OBTENER LOS DATOS DE LA DB Y PODER PINTARLOS
-    fun findByMovie(context: Context?, peli:Pelicula):List<Cine>{
-        val listaCines: MutableList<Cine> = mutableListOf()
-        lateinit var c: Cursor
-        //lateinit var c1: Cursor
-        try {
-            val db = DBOpenHelper.getInstance(context)!!.readableDatabase
-            /*
-            val columnas = arrayOf(
-                PeliculaCineContract.Companion.EntradaPeli.IDCOL,
-                PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,
-                PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC,
-                PeliculaCineContract.Companion.EntradaPeli.POSTERCOL,
-                PeliculaCineContract.Companion.EntradaPeli.TIMECOL,
-                PeliculaCineContract.Companion.EntradaPeli.YEARCOL,
-                PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL
-            )
 
-         */
-            c = db.rawQuery("SELECT * FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id", arrayOf(peli.id.toString()))
-            //c1 = db.query(PeliculaCineContract.Companion.EntradaCine.TABLA, columnas, null, null,null,null,null)
+    fun findByMovie(context: Context?, peli:Pelicula):List<Cine>{
+        lateinit var listaCines: MutableList<Cine>
+        lateinit var db: SQLiteDatabase
+        lateinit var c: Cursor
+        try {
+            db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            c = db.rawQuery("SELECT c.nombreCine, c.ciudad, c.latitud, c.longitud FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id WHERE p.id = ?", arrayOf(peli.id.toString()))
             while(c.moveToNext()){
                 val cinema = Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4))
                 listaCines.add(cinema)
@@ -103,6 +90,7 @@ class CineDAO: DAO<Cine> {
         return listaCines
 
     }
+
 
 
     fun findById(context: Context?, id:Int):Cine{
