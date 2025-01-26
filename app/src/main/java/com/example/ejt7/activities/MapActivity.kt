@@ -44,7 +44,6 @@ class MapActivity : AppCompatActivity() {
         mapController.setZoom(9.5)
 
         val idPeli = intent.getLongExtra("ID",0)
-        //val listaCinemas: ArrayList<Cine>? = intent.getParcelableArrayListExtra("listaCinemas")
         daoPeli = PeliculaDAO()
         daoCine = CineDAO()
 
@@ -94,6 +93,8 @@ class MapActivity : AppCompatActivity() {
 
 
     }
+    /*
+    //PRUEBAS addMarkers
     private fun addMarker(cine: Cine){
         val marker = Marker(map)
         marker.position = GeoPoint(cine.latitud, cine.longitud)
@@ -104,6 +105,8 @@ class MapActivity : AppCompatActivity() {
         map.overlays.add(marker)
 
     }
+
+     */
 
     public override fun onResume(){
         super.onResume()
