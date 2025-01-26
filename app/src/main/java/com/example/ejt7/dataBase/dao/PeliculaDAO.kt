@@ -20,7 +20,7 @@ class PeliculaDAO():DAO<Pelicula> {
             lista = mutableListOf()
 
             while (c.moveToNext()){
-                val nueva = Pelicula(c.getInt(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6))
+                val nueva = Pelicula(c.getLong(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6))
                 lista.add(nueva)
             }
 
@@ -49,7 +49,7 @@ class PeliculaDAO():DAO<Pelicula> {
         db.close()
     }
 
-    override fun delete(context: Context?, idpelicula: Int){
+    override fun delete(context: Context?, idpelicula: Long){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
             "DELETE FROM Pelicula WHERE id=${idpelicula};"
@@ -63,7 +63,7 @@ class PeliculaDAO():DAO<Pelicula> {
         db.close()
     }
 
-    fun findMovieById(context: Context?, id:Int): Pelicula{
+    fun findMovieById(context: Context?, id:Long): Pelicula{
        lateinit var res: Pelicula
        lateinit var db: SQLiteDatabase
        lateinit var c: Cursor
@@ -72,7 +72,7 @@ class PeliculaDAO():DAO<Pelicula> {
            c = db.rawQuery("SELECT * FROM Pelicula WHERE id = ?", arrayOf(id.toString()))
            if(c.moveToNext()){
                res = Pelicula(
-                   c.getInt(0),
+                   c.getLong(0),
                    c.getString(1),
                    c.getString(2),
                    c.getInt(3),

@@ -43,16 +43,18 @@ class MapActivity : AppCompatActivity() {
         val mapController = map.controller
         mapController.setZoom(9.5)
 
-        val idPeli = intent.getIntExtra("ID",0)
-
+        val idPeli = intent.getLongExtra("ID",0)
+        //val listaCinemas: ArrayList<Cine>? = intent.getParcelableArrayListExtra("listaCinemas")
         daoPeli = PeliculaDAO()
         daoCine = CineDAO()
+        val todoCines = daoCine.findAll(this)
         val peli = daoPeli.findMovieById(this,idPeli)
         val cines = daoCine.findByMovie(this, peli)
+        //val cines = daoCine.listaCinesPorPeli(this,idPeli)
 
 
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
-        cines.forEach { c: Cine ->
+        todoCines.forEach { c: Cine ->
             items.add(
                 OverlayItem(
                     c.ciudad.toString(),
@@ -60,6 +62,22 @@ class MapActivity : AppCompatActivity() {
                     GeoPoint(c.latitud, c.longitud)
                 )
             )
+            val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
+                items,
+                object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
+                    override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
+                        return true
+                    }
+
+                    override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
+                        return false
+                    }
+                }, applicationContext
+            )
+            mOverlay.setFocusItemsOnTap(true)
+            map.getOverlays().add(mOverlay)
+            mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
+
         }
         /*
         items.add(
@@ -72,21 +90,7 @@ class MapActivity : AppCompatActivity() {
 
          */
 
-        val mOverlay:ItemizedOverlayWithFocus<OverlayItem> = ItemizedOverlayWithFocus<OverlayItem>(
-            items,
-            object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem?> {
-                override fun onItemSingleTapUp(index: Int, item: OverlayItem?): Boolean {
-                    return true
-                }
 
-                override fun onItemLongPress(index: Int, item: OverlayItem?): Boolean {
-                    return false
-                }
-            }, applicationContext
-        )
-        mOverlay.setFocusItemsOnTap(true)
-        map.getOverlays().add(mOverlay)
-        mapController.setCenter(GeoPoint(36.7194937132025, -4.365499019622804))
 
 
     }

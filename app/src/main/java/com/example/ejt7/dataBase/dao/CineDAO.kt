@@ -29,7 +29,7 @@ class CineDAO: DAO<Cine> {
             val db = DBOpenHelper.getInstance(context)!!.readableDatabase
             c = db.rawQuery(SELECT_ALl_CINEMA, null)
             while(c.moveToNext()){
-                listaCines.add(Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
+                listaCines.add(Cine(c.getLong(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
             }
         }catch (e: Exception){
             e.printStackTrace()
@@ -39,7 +39,7 @@ class CineDAO: DAO<Cine> {
         return listaCines
     }
 
-    override fun delete(context: Context?, t: Int) {
+    override fun delete(context: Context?, t: Long) {
         TODO("Not yet implemented")
     }
 
@@ -72,24 +72,62 @@ class CineDAO: DAO<Cine> {
 
 
     fun findByMovie(context: Context?, peli:Pelicula):List<Cine>{
-        lateinit var listaCines: MutableList<Cine>
-        lateinit var db: SQLiteDatabase
-        lateinit var c: Cursor
+        val listaCines: MutableList<Cine> = mutableListOf()
+        var db: SQLiteDatabase? = null
+        var c: Cursor? = null
         try {
             db = DBOpenHelper.getInstance(context)!!.readableDatabase
-            c = db.rawQuery("SELECT c.nombreCine, c.ciudad, c.latitud, c.longitud FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id WHERE p.id = ?", arrayOf(peli.id.toString()))
-            while(c.moveToNext()){
-                val cinema = Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4))
-                listaCines.add(cinema)
+            c = db?.rawQuery("SELECT c.nombreCine, c.ciudad, c.latitud, c.longitud FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine WHERE r.id_peli = ?", arrayOf(peli.id.toString()))
+            if(c != null){
+                while(c.moveToNext()){
+                    val cinema = Cine(c.getLong(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4))
+                    listaCines.add(cinema)
+                }
             }
+
         }catch (e: Exception){
             e.printStackTrace()
         }finally {
-            c.close()
+            c?.close()
         }
         return listaCines
 
     }
+/*
+    fun listaCinesPorPeli(context: Context?, idPelicula: Long): ArrayList<Cine>{
+        val listaCines: ArrayList<Cine> = ArrayList<Cine>()
+
+        val db: SQLiteDatabase = DBOpenHelper.getInstance(context)!!.readableDatabase
+        val query = "SELECT ${PeliculaCineContract.Companion.EntradaCine.ID}, \n" +
+                "${PeliculaCineContract.Companion.EntradaCine.NOMBRE},\n" +
+                "${PeliculaCineContract.Companion.EntradaCine.CIUDAD},\n" +
+                "${PeliculaCineContract.Companion.EntradaCine.LATITUD},\n" +
+                "${PeliculaCineContract.Companion.EntradaCine.LONGITUD}\n" +
+                "FROM ${PeliculaCineContract.Companion.EntradaCine.TABLA}\n" +
+                "INNER JOIN ${PeliculaCineContract.Companion.EntradaRelacion.TABLA}\n" +
+                "ON ${PeliculaCineContract.Companion.EntradaCine.ID} = ${PeliculaCineContract.Companion.EntradaRelacion.ID_CINE}\n" +
+                "WHERE ${PeliculaCineContract.Companion.EntradaRelacion.ID_PELI} = ?"
+        val cursor = db.rawQuery(query, arrayOf(idPelicula.toString()))
+
+        if(cursor.moveToFirst()){
+            do{
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(PeliculaCineContract.Companion.EntradaCine.ID))
+                val nombre = cursor.getString(cursor.getColumnIndexOrThrow(PeliculaCineContract.Companion.EntradaCine.NOMBRE))
+                val ciudadString = cursor.getString(cursor.getColumnIndexOrThrow(PeliculaCineContract.Companion.EntradaCine.CIUDAD))
+                val latitud = cursor.getDouble(cursor.getColumnIndexOrThrow(PeliculaCineContract.Companion.EntradaCine.LATITUD))
+                val longitud = cursor.getDouble(cursor.getColumnIndexOrThrow(PeliculaCineContract.Companion.EntradaCine.LONGITUD))
+
+                val ciudad= Ciudad.fromString(ciudadString) ?: throw IllegalArgumentException("Ciudad no válida")
+
+                val cine = Cine(id,nombre,ciudad,latitud,longitud)
+                listaCines.add(cine)
+            }while (cursor.moveToNext())
+        }
+        cursor.close()
+        return listaCines
+    }
+
+ */
 
 
 
@@ -102,7 +140,7 @@ class CineDAO: DAO<Cine> {
             c = db.rawQuery(SELECT_CINE_ID, arrayOf(id.toString()))
             if(c.moveToNext()){
                 res = Cine(
-                    c.getInt(0),
+                    c.getLong(0),
                     c.getString(1),
                     Ciudad.valueOf(c.getString(2)),
                     c.getDouble(3),

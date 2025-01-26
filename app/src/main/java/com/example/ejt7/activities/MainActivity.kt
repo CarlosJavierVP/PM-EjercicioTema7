@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onItemSelected(movieSelected: Pelicula){
-
         val intent = Intent(this, MapActivity::class.java)
         intent.putExtra("ID",movieSelected.id)
         //intent.putExtra("TITULO", movieSelected.title)

@@ -170,14 +170,14 @@ class DBOpenHelper private constructor(context: Context?):
         Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
     )
 
-    private fun randomCine(): Int{
+    private fun randomCine(): Long{
         return cargarCines().random().id
     }
 
     private fun relacionCinePeli(db: SQLiteDatabase){
         val pelis = cargarPeliculas()
         pelis.forEach { pelicula ->
-            val cineSeleccionado = mutableSetOf<Int>()
+            val cineSeleccionado = mutableSetOf<Long>()
             while (cineSeleccionado.size < 5){
                 val idRandom = randomCine()
                 if(!cineSeleccionado.contains(idRandom)){
