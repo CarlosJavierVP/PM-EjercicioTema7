@@ -47,14 +47,14 @@ class MapActivity : AppCompatActivity() {
         //val listaCinemas: ArrayList<Cine>? = intent.getParcelableArrayListExtra("listaCinemas")
         daoPeli = PeliculaDAO()
         daoCine = CineDAO()
-        val todoCines = daoCine.findAll(this)
+
         val peli = daoPeli.findMovieById(this,idPeli)
-        val cines = daoCine.findByMovie(this, peli)
-        //val cines = daoCine.listaCinesPorPeli(this,idPeli)
+
+        val cines = daoCine.findCinesByPelis(this,peli)
 
 
         val items : ArrayList<OverlayItem> = ArrayList<OverlayItem>()
-        todoCines.forEach { c: Cine ->
+        cines.forEach { c: Cine ->
             items.add(
                 OverlayItem(
                     c.ciudad.toString(),
