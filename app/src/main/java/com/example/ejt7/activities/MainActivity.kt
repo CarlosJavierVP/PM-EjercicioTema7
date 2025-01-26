@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.ejt7.R
 import com.example.ejt7.adapter.PeliculaAdapter
+import com.example.ejt7.dataBase.dao.CineDAO
 import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityMainBinding
 import com.example.ejt7.models.Pelicula
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var intentLaunch:ActivityResultLauncher<Intent>
     private var listaVacia:Boolean=false
     private lateinit var  miDAO:PeliculaDAO
+    //private lateinit var cineDao:CineDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +107,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onItemSelected(movieSelected: Pelicula){
+
         val intent = Intent(this, MapActivity::class.java)
         intent.putExtra("ID",movieSelected.id)
         //intent.putExtra("TITULO", movieSelected.title)

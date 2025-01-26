@@ -45,6 +45,8 @@ class MapActivity : AppCompatActivity() {
 
         val idPeli = intent.getIntExtra("ID",0)
 
+        daoPeli = PeliculaDAO()
+        daoCine = CineDAO()
         val peli = daoPeli.findMovieById(this,idPeli)
         val cines = daoCine.findByMovie(this, peli)
 

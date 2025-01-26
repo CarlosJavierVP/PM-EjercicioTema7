@@ -73,10 +73,11 @@ class CineDAO: DAO<Cine> {
     //MODIFICAR DAO --> ARREGLAR MÉTODOS PARA OBTENER LOS DATOS DE LA DB Y PODER PINTARLOS
     fun findByMovie(context: Context?, peli:Pelicula):List<Cine>{
         val listaCines: MutableList<Cine> = mutableListOf()
-        //lateinit var c: Cursor
-        lateinit var c1: Cursor
+        lateinit var c: Cursor
+        //lateinit var c1: Cursor
         try {
             val db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            /*
             val columnas = arrayOf(
                 PeliculaCineContract.Companion.EntradaPeli.IDCOL,
                 PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,
@@ -86,16 +87,18 @@ class CineDAO: DAO<Cine> {
                 PeliculaCineContract.Companion.EntradaPeli.YEARCOL,
                 PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL
             )
-            //c = db.rawQuery("SELECT * FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id", arrayOf(peli.id.toString()))
-            c1 = db.query(PeliculaCineContract.Companion.EntradaCine.TABLA, columnas, null, null,null,null,null)
-            while(c1.moveToNext()){
-                val cinema = Cine(c1.getInt(0),c1.getString(1), Ciudad.valueOf(c1.getString(2)),c1.getDouble(3), c1.getDouble(4))
+
+         */
+            c = db.rawQuery("SELECT * FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine INNER JOIN Pelicula p ON r.id_peli = p.id", arrayOf(peli.id.toString()))
+            //c1 = db.query(PeliculaCineContract.Companion.EntradaCine.TABLA, columnas, null, null,null,null,null)
+            while(c.moveToNext()){
+                val cinema = Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4))
                 listaCines.add(cinema)
             }
         }catch (e: Exception){
             e.printStackTrace()
         }finally {
-            c1.close()
+            c.close()
         }
         return listaCines
 
