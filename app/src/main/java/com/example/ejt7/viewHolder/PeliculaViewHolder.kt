@@ -32,6 +32,8 @@ class PeliculaViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnCrea
         p0.add(this.adapterPosition, 0, 0, "Eliminar")
         p0.add(this.adapterPosition, 1,1,"Editar")
         p0.add(this.adapterPosition, 2,2, "Detalle")
+        p0.add(this.adapterPosition, 3,3, "Hacer foto")
+        p0.add(this.adapterPosition, 4,4, "Ver foto")
     }
 
 

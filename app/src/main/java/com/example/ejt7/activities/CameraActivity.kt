@@ -1,17 +1,25 @@
 package com.example.ejt7.activities
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
 import com.example.ejt7.databinding.ActivityCameraBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -19,12 +27,18 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
     private lateinit var  cameraExecutor: ExecutorService
 
+    private lateinit var  imageCapture: ImageCapture
+    private lateinit var pelicula: String
+    private var id = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        id = intent.extras!!.getInt("id")
+        pelicula = intent.extras!!.getString("pelicula").toString()
 
         if (allPermissionsGranted()){
             startCamera()
@@ -52,7 +66,41 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        TODO("Not yet implemented")
+        //Reerencia estable para la captura de imágenes
+        val imageCapture = imageCapture ?: return
+
+        //Nombre, hora y donde se almacena el archivo que tendrá la db
+        val name = "${pelicula}_"+ SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+            .format(System.currentTimeMillis())
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+            }
+        }
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+            contentResolver, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
+        ).build()
+
+        //listener para la captura de imagen que se lanzará cuando se ha hecho una foto
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exception: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exception.message}")
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val msg = "Captura de foto correcta: ${output.savedUri}"
+                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
+
     }
 
     override fun onDestroy() {
@@ -71,5 +119,21 @@ class CameraActivity : AppCompatActivity() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_PERMISSIONS){
+            if (allPermissionsGranted()){
+                startCamera()
+            } else {
+                Toast.makeText(this, "Permisos no concedidos por el usuario.", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
     }
 }

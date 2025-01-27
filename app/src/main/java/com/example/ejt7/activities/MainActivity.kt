@@ -174,9 +174,18 @@ class MainActivity : AppCompatActivity() {
             2 -> {
                 detallesPeli(movieSelected, item)
             }
+            3 -> {
+                fotoPeli(movieSelected, item)
+            }
             else -> return super.onContextItemSelected(item)
         }
         return true
+    }
+    private fun fotoPeli(movieSelected: Pelicula, item: MenuItem){
+        val intent = Intent(this, CameraActivity::class.java)
+        intent.putExtra("TITULO", movieSelected.title)
+        intent.putExtra("ID", movieSelected.id)
+        intentLaunch.launch(intent)
     }
 
     private fun detallesPeli(movieSelected: Pelicula, item: MenuItem){
