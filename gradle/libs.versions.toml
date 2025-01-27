@@ -12,6 +12,7 @@ constraintlayout = "2.1.4"
 glide = "4.16.0"
 swipeversion = "1.1.0"
 osmdroidAndroid = "6.1.20"
+cameraCamera2 = "1.3.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +26,9 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-swiperefreshlayout = { group ="androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swipeversion" }
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

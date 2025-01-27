@@ -5,10 +5,4 @@ enum class Ciudad(val nombre: String) {
     Madrid("Madrid"), Valencia("Valencia"), Barcelona("Barcelona"),
     Gijon("Gijon"), Pamplona("Pamplona");
 
-
-    companion object{
-        fun fromString(nombre:String):Ciudad?{
-            return values().find { it.nombre.equals(nombre) }
-        }
-    }
 }
