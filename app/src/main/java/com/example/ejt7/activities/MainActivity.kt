@@ -177,10 +177,20 @@ class MainActivity : AppCompatActivity() {
             3 -> {
                 fotoPeli(movieSelected, item)
             }
+            4 -> {
+                verFoto(movieSelected, item)
+            }
             else -> return super.onContextItemSelected(item)
         }
         return true
     }
+
+    private fun verFoto(movieSelected: Pelicula, item: MenuItem){
+        val intent = Intent(this, ImageActivity::class.java)
+        intent.putExtra("id", movieSelected.id)
+        intentLaunch.launch(intent)
+    }
+
     private fun fotoPeli(movieSelected: Pelicula, item: MenuItem){
         val intent = Intent(this, CameraActivity::class.java)
         intent.putExtra("TITULO", movieSelected.title)
