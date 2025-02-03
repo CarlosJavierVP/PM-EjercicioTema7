@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun verFoto(movieSelected: Pelicula, item: MenuItem){
         val intent = Intent(this, ImageActivity::class.java)
-        intent.putExtra("id", movieSelected.id)
+        intent.putExtra("ID", movieSelected.id)
         intentLaunch.launch(intent)
     }
 

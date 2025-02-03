@@ -13,11 +13,14 @@ import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityImageBinding
 
 class ImageActivity : AppCompatActivity() {
+
+    private lateinit var binding:ActivityImageBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val binding = ActivityImageBinding.inflate(layoutInflater)
+        binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -26,7 +29,7 @@ class ImageActivity : AppCompatActivity() {
             insets
         }
 
-        val id = intent.extras!!.getLong("id")
+        val id = intent.extras!!.getLong("ID")
         val miDao = PeliculaDAO()
         val peli = miDao.findMovieById(this, id)
         if (peli.uri.isNotEmpty()){
