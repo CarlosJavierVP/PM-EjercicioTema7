@@ -98,7 +98,49 @@ class PeliculaDAO():DAO<Pelicula> {
         db.execSQL("DELETE FROM Pelicula;")
         db.close()
     }
+    fun findMovieById(context: Context?, id:Long): Pelicula{
+        lateinit var res: Pelicula
+        lateinit var db: SQLiteDatabase
+        lateinit var c: Cursor
+        try {
+            db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            val columnas = arrayOf(
+                PeliculaCineContract.Companion.EntradaPeli.IDCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,
+                PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL,
+                PeliculaCineContract.Companion.EntradaPeli.POSTERCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TIMECOL,
+                PeliculaCineContract.Companion.EntradaPeli.YEARCOL,
+                PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL,
+                PeliculaCineContract.Companion.EntradaPeli.URICOL
+            )
+            val identificador = id.toString()
+            val valores = arrayOf(identificador)
+            c = db.query(
+                PeliculaCineContract.Companion.EntradaPeli.TABLA,
+                columnas, "id=?", valores, null, null, null)
+            if(c.moveToNext()){
+                res = Pelicula(
+                    c.getLong(0),
+                    c.getString(1),
+                    c.getString(2),
+                    c.getInt(3),
+                    c.getInt(4),
+                    c.getInt(5),
+                    c.getString(6),
+                    c.getString(7)
+                )
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+        }finally {
+            c.close()
+            db.close()
+        }
+        return res
+    }
 
+    /*
     fun findMovieById(context: Context?, id:Long): Pelicula{
        lateinit var res: Pelicula
        lateinit var db: SQLiteDatabase
@@ -126,6 +168,8 @@ class PeliculaDAO():DAO<Pelicula> {
        }
         return res
     }
+
+     */
 
 
 
