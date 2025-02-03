@@ -102,7 +102,7 @@ class CameraActivity : AppCompatActivity() {
                     val miDAO = PeliculaDAO()
                     val peliSeleccionada = miDAO.findMovieById(applicationContext, id)
                     peliSeleccionada.uri = output.savedUri.toString()
-                    miDAO.update(applicationContext, peliSeleccionada)
+                    miDAO.actualizarBBDD(applicationContext, peliSeleccionada)
                 }
             }
         )

@@ -1,5 +1,6 @@
 package com.example.ejt7.dataBase.dao
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -75,6 +76,21 @@ class PeliculaDAO():DAO<Pelicula> {
         db.close()
     }
 
+    fun actualizarBBDD(context: Context?, pelicula: Pelicula){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        val values = ContentValues()
+        values.put(PeliculaCineContract.Companion.EntradaPeli.IDCOL, pelicula.id)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.TITULOCOL, pelicula.title)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL, pelicula.description)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.POSTERCOL, pelicula.poster)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.TIMECOL, pelicula.time)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.YEARCOL, pelicula.year)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL, pelicula.country)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.URICOL, pelicula.uri)
+        db.update(PeliculaCineContract.Companion.EntradaPeli.TABLA, values, "id=?", arrayOf(pelicula.id.toString()))
+        db.close()
+    }
+
     override fun save(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
@@ -139,7 +155,6 @@ class PeliculaDAO():DAO<Pelicula> {
         }
         return res
     }
-
     /*
     fun findMovieById(context: Context?, id:Long): Pelicula{
        lateinit var res: Pelicula
@@ -168,7 +183,6 @@ class PeliculaDAO():DAO<Pelicula> {
        }
         return res
     }
-
      */
 
 

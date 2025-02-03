@@ -34,7 +34,7 @@ class DBOpenHelper private constructor(context: Context?):
                             +",${PeliculaCineContract.Companion.EntradaPeli.TIMECOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.YEARCOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL} VARCHAR(20) NOT NULL"
-                            +",${PeliculaCineContract.Companion.EntradaPeli.URICOL} VARCHAR(100) NOT NULL)"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.URICOL} VARCHAR(100))"
                 )
                 p0.execSQL("CREATE TABLE ${PeliculaCineContract.Companion.EntradaCine.TABLA}"
                         +"(${PeliculaCineContract.Companion.EntradaCine.ID} Integer primary key"
@@ -94,20 +94,7 @@ class DBOpenHelper private constructor(context: Context?):
         relacionCinePeli(db)
     }
 
-    fun actualizarBBDD(context: Context?, pelicula: Pelicula){
-        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
-        val values = ContentValues()
-        values.put(PeliculaCineContract.Companion.EntradaPeli.IDCOL, pelicula.id)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.TITULOCOL, pelicula.title)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL, pelicula.description)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.POSTERCOL, pelicula.poster)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.TIMECOL, pelicula.time)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.YEARCOL, pelicula.year)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL, pelicula.country)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.URICOL, pelicula.uri)
-        db.update(PeliculaCineContract.Companion.EntradaPeli.TABLA, values, "id=?", arrayOf(pelicula.id.toString()))
-        db.close()
-    }
+
 
     private fun cargarPeliculas(): MutableList<Pelicula>{
         return mutableListOf(
