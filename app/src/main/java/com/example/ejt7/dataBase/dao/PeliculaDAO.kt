@@ -20,7 +20,7 @@ class PeliculaDAO():DAO<Pelicula> {
             lista = mutableListOf()
 
             while (c.moveToNext()){
-                val nueva = Pelicula(c.getLong(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6))
+                val nueva = Pelicula(c.getLong(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6), c.getString(7))
                 lista.add(nueva)
             }
 
@@ -78,7 +78,8 @@ class PeliculaDAO():DAO<Pelicula> {
                    c.getInt(3),
                    c.getInt(4),
                    c.getInt(5),
-                   c.getString(6)
+                   c.getString(6),
+                   c.getString(7)
                )
            }
        }catch (e: Exception){

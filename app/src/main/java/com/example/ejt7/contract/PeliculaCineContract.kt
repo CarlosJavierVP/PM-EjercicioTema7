@@ -17,6 +17,7 @@ class PeliculaCineContract {
                 val TIMECOL = "duracion"
                 val YEARCOL = "anho"
                 val COUNTRYCOL = "pais"
+                val URICOL = "uri"
             }
 
         }
