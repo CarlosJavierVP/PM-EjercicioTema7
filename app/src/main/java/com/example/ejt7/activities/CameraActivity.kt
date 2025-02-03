@@ -10,8 +10,11 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -63,7 +66,26 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
-        TODO("Not yet implemented")
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            //vincular el ciclo de vida de la cámara al ciclo de vida de la app
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            // preview
+            val preview = Preview.Builder().build().also{
+                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+            }
+            imageCapture = ImageCapture.Builder().build()
+            // Selecciona la cámara trasera por defecto
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try{
+                // Desvincula antes de volver a vincular
+                cameraProvider.unbindAll()
+                // VInculamos los casos de uso a la cámara
+                cameraProvider.bindToLifecycle( this, cameraSelector, preview, imageCapture)
+            } catch (exc: Exception){
+                Log.e(TAG, "Vinculación errónea", exc)
+            }
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun takePhoto() {
