@@ -29,7 +29,7 @@ class DBOpenHelper private constructor(context: Context?):
                     "CREATE TABLE ${PeliculaCineContract.Companion.EntradaPeli.TABLA}"
                             +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} integer primary key"
                             +",${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL} VARCHAR(20) NOT NULL"
-                            +",${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC} VARCHAR(70) NOT NULL"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL} VARCHAR(70) NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.TIMECOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.YEARCOL} int NOT NULL"
@@ -72,7 +72,7 @@ class DBOpenHelper private constructor(context: Context?):
             db.execSQL(
                 ("INSERT INTO ${PeliculaCineContract.Companion.EntradaPeli.TABLA}("+
                         "${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL},"+
-                        "${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.TIMECOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.YEARCOL},"+
@@ -99,7 +99,7 @@ class DBOpenHelper private constructor(context: Context?):
         val values = ContentValues()
         values.put(PeliculaCineContract.Companion.EntradaPeli.IDCOL, pelicula.id)
         values.put(PeliculaCineContract.Companion.EntradaPeli.TITULOCOL, pelicula.title)
-        values.put(PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC, pelicula.description)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL, pelicula.description)
         values.put(PeliculaCineContract.Companion.EntradaPeli.POSTERCOL, pelicula.poster)
         values.put(PeliculaCineContract.Companion.EntradaPeli.TIMECOL, pelicula.time)
         values.put(PeliculaCineContract.Companion.EntradaPeli.YEARCOL, pelicula.year)

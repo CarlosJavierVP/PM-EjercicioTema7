@@ -3,12 +3,46 @@ package com.example.ejt7.dataBase.dao
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.example.ejt7.contract.PeliculaCineContract
 import com.example.ejt7.dataBase.DBOpenHelper
 import com.example.ejt7.models.Cine
 import com.example.ejt7.models.Ciudad
 import com.example.ejt7.models.Pelicula
 
 class PeliculaDAO():DAO<Pelicula> {
+
+    override fun findAll(context: Context?): MutableList<Pelicula> {
+        var lista: MutableList<Pelicula>
+        lateinit var c: Cursor
+
+        try{
+            val db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            val columnas = arrayOf(
+                PeliculaCineContract.Companion.EntradaPeli.IDCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,
+                PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL,
+                PeliculaCineContract.Companion.EntradaPeli.POSTERCOL,
+                PeliculaCineContract.Companion.EntradaPeli.TIMECOL,
+                PeliculaCineContract.Companion.EntradaPeli.YEARCOL,
+                PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL,
+                PeliculaCineContract.Companion.EntradaPeli.URICOL
+            )
+            c = db.query(PeliculaCineContract.Companion.EntradaPeli.TABLA,
+                columnas, null, null, null, null, null)
+
+            lista = mutableListOf()
+
+            while (c.moveToNext()){
+                val nueva = Pelicula(c.getLong(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6), c.getString(7))
+                lista.add(nueva)
+            }
+
+        }finally {
+            c.close()
+        }
+        return lista
+    }
+    /*
     override fun findAll(context: Context?): MutableList<Pelicula> {
         var lista: MutableList<Pelicula>
         lateinit var c: Cursor
@@ -29,6 +63,8 @@ class PeliculaDAO():DAO<Pelicula> {
         }
         return lista
     }
+
+     */
 
     override fun update(context: Context?, pelicula:Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase

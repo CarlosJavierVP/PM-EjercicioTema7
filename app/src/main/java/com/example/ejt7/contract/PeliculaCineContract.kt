@@ -12,7 +12,7 @@ class PeliculaCineContract {
                 val TABLA = "Pelicula"
                 val IDCOL = "id"
                 val TITULOCOL = "titulo"
-                val DESCRIPCIONCOLC = "descripcion"
+                val DESCRIPCIONCOL = "descripcion"
                 val POSTERCOL = "poster"
                 val TIMECOL = "duracion"
                 val YEARCOL = "anho"

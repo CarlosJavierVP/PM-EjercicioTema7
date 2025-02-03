@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ejt7.R
+import com.example.ejt7.dataBase.dao.PeliculaDAO
 import com.example.ejt7.databinding.ActivityCameraBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -25,11 +26,11 @@ import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
-    private lateinit var  cameraExecutor: ExecutorService
+    private lateinit var cameraExecutor: ExecutorService
 
-    private lateinit var  imageCapture: ImageCapture
+    private lateinit var imageCapture: ImageCapture
     private lateinit var pelicula: String
-    private var id = -1
+    private var id = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        id = intent.extras!!.getInt("id")
+        id = intent.extras!!.getLong("id")
         pelicula = intent.extras!!.getString("pelicula").toString()
 
         if (allPermissionsGranted()){
@@ -75,7 +76,7 @@ class CameraActivity : AppCompatActivity() {
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
             }
@@ -97,6 +98,11 @@ class CameraActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Captura de foto correcta: ${output.savedUri}"
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                    // Insertar en la base de datos la URI
+                    val miDAO = PeliculaDAO()
+                    val peliSeleccionada = miDAO.findMovieById(applicationContext, id)
+                    peliSeleccionada.uri = output.savedUri.toString()
+                    miDAO.update(applicationContext, peliSeleccionada)
                 }
             }
         )
