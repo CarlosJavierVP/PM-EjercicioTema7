@@ -1,5 +1,6 @@
 package com.example.ejt7.dataBase
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -76,7 +77,7 @@ class DBOpenHelper private constructor(context: Context?):
                         "${PeliculaCineContract.Companion.EntradaPeli.TIMECOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.YEARCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL})"+
-                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}');")
+                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}, '${peli.uri}');")
             )
         }
         for (cine in listaCine){
@@ -91,6 +92,21 @@ class DBOpenHelper private constructor(context: Context?):
         }
 
         relacionCinePeli(db)
+    }
+
+    fun actualizarBBDD(context: Context?, pelicula: Pelicula){
+        val db = DBOpenHelper.getInstance(context)!!.writableDatabase
+        val values = ContentValues()
+        values.put(PeliculaCineContract.Companion.EntradaPeli.IDCOL, pelicula.id)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.TITULOCOL, pelicula.title)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOLC, pelicula.description)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.POSTERCOL, pelicula.poster)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.TIMECOL, pelicula.time)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.YEARCOL, pelicula.year)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL, pelicula.country)
+        values.put(PeliculaCineContract.Companion.EntradaPeli.URICOL, pelicula.uri)
+        db.update(PeliculaCineContract.Companion.EntradaPeli.TABLA, values, "id=?", arrayOf(pelicula.id.toString()))
+        db.close()
     }
 
     private fun cargarPeliculas(): MutableList<Pelicula>{
