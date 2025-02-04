@@ -26,7 +26,7 @@ class DBOpenHelper private constructor(context: Context?):
             if (p0 != null) {
                 p0.execSQL(
                     "CREATE TABLE ${PeliculaCineContract.Companion.EntradaPeli.TABLA}"
-                            +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} Long primary key"
+                            +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} Integer primary key"
                             +",${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL} VARCHAR(20) NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL} VARCHAR(70) NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL} int NOT NULL"
@@ -44,8 +44,8 @@ class DBOpenHelper private constructor(context: Context?):
                 )
                 p0.execSQL("CREATE TABLE ${PeliculaCineContract.Companion.EntradaRelacion.TABLA}"
                     +"(${PeliculaCineContract.Companion.EntradaRelacion.ID} Integer primary key"
-                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_PELI} Integer NOT NULL"
-                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_CINE} Integer NOT NULL)"
+                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_PELI} Long NOT NULL"
+                    +",${PeliculaCineContract.Companion.EntradaRelacion.ID_CINE} Long NOT NULL)"
                 )
                 inicializarBBDD(p0)
             }
@@ -174,14 +174,14 @@ class DBOpenHelper private constructor(context: Context?):
         Cine(16, "Yelmo Itaroa", Ciudad.Pamplona, 42.82913707016941, -1.57926348455501)
     )
 
-    private fun randomCine(): Long{
+    private fun randomCine(): Int{
         return cargarCines().random().id
     }
 
     private fun relacionCinePeli(db: SQLiteDatabase){
         val pelis = cargarPeliculas()
         pelis.forEach { pelicula ->
-            val cineSeleccionado = mutableSetOf<Long>()
+            val cineSeleccionado = mutableSetOf<Int>()
             while (cineSeleccionado.size < 5){
                 val idRandom = randomCine()
                 if(!cineSeleccionado.contains(idRandom)){

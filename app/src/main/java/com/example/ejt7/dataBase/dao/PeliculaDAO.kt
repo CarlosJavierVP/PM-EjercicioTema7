@@ -30,7 +30,7 @@ class PeliculaDAO():DAO<Pelicula> {
             lista = mutableListOf()
 
             while (c.moveToNext()){
-                val nueva = Pelicula(c.getLong(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6), c.getString(7))
+                val nueva = Pelicula(c.getInt(0),c.getString(1), c.getString(2),c.getInt(3),c.getInt(4),c.getInt(5),c.getString(6), c.getString(7))
                 lista.add(nueva)
             }
 
@@ -101,7 +101,7 @@ class PeliculaDAO():DAO<Pelicula> {
         db.close()
     }
 
-    override fun delete(context: Context?, idpelicula: Long){
+    override fun delete(context: Context?, idpelicula: Int){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
             "DELETE FROM Pelicula WHERE id=${idpelicula};"
@@ -114,7 +114,7 @@ class PeliculaDAO():DAO<Pelicula> {
         db.execSQL("DELETE FROM Pelicula;")
         db.close()
     }
-    fun findMovieById(context: Context?, id:Long): Pelicula{
+    fun findMovieById(context: Context?, id:Int): Pelicula{
         lateinit var res: Pelicula
         //lateinit var db: SQLiteDatabase
         lateinit var c: Cursor
@@ -137,7 +137,7 @@ class PeliculaDAO():DAO<Pelicula> {
                 columnas, "id = ?", valores, null, null, null)
             while(c.moveToNext()){
                 res = Pelicula(
-                    c.getLong(0),
+                    c.getInt(0),
                     c.getString(1),
                     c.getString(2),
                     c.getInt(3),
@@ -147,8 +147,6 @@ class PeliculaDAO():DAO<Pelicula> {
                     c.getString(7)
                 )
             }
-        }catch (e: Exception){
-            e.printStackTrace()
         }finally {
             c.close()
             //db.close()
@@ -156,7 +154,7 @@ class PeliculaDAO():DAO<Pelicula> {
         return res
     }
     /*
-    fun findMovieById(context: Context?, id:Long): Pelicula{
+    fun findMovieById(context: Context?, id:Int): Pelicula{
        lateinit var res: Pelicula
        lateinit var db: SQLiteDatabase
        lateinit var c: Cursor
@@ -165,7 +163,7 @@ class PeliculaDAO():DAO<Pelicula> {
            c = db.rawQuery("SELECT * FROM Pelicula WHERE id = ?", arrayOf(id.toString()))
            if(c.moveToNext()){
                res = Pelicula(
-                   c.getLong(0),
+                   c.getInt(0),
                    c.getString(1),
                    c.getString(2),
                    c.getInt(3),
