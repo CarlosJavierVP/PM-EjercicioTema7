@@ -76,7 +76,8 @@ class DBOpenHelper private constructor(context: Context?):
                         "${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.TIMECOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.YEARCOL},"+
-                        "${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL})"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL},"+
+                        "${PeliculaCineContract.Companion.EntradaPeli.URICOL})"+
                         " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}, '${peli.uri}');")
             )
         }
