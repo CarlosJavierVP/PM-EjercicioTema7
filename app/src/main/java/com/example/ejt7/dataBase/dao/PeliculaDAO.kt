@@ -13,7 +13,7 @@ import com.example.ejt7.models.Pelicula
 class PeliculaDAO():DAO<Pelicula> {
 
     override fun findAll(context: Context?): MutableList<Pelicula> {
-        var lista: MutableList<Pelicula>
+        lateinit var lista: MutableList<Pelicula>
         lateinit var c: Cursor
 
         try{
@@ -43,7 +43,9 @@ class PeliculaDAO():DAO<Pelicula> {
         }
         return lista
     }
-    /*
+
+
+/*
     override fun findAll(context: Context?): MutableList<Pelicula> {
         var lista: MutableList<Pelicula>
         lateinit var c: Cursor
@@ -65,7 +67,7 @@ class PeliculaDAO():DAO<Pelicula> {
         return lista
     }
 
-     */
+ */
 
     override fun update(context: Context?, pelicula:Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
@@ -75,6 +77,8 @@ class PeliculaDAO():DAO<Pelicula> {
         q.close()
         db.close()
     }
+
+
 
     fun actualizarBBDD(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
@@ -94,7 +98,7 @@ class PeliculaDAO():DAO<Pelicula> {
     override fun save(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
-            "INSERT INTO Pelicula (title, description, poster, time, year, country, uri) VALUES "
+            "INSERT INTO Pelicula (titulo, descripcion, poster, duracion, anho, pais, uri) VALUES "
                     +" ('${pelicula.title}', '${pelicula.description}', '${pelicula.poster}', "
                     +" '${pelicula.time}', '${pelicula.year}', '${pelicula.country}','${pelicula.uri}');"
         )
@@ -116,10 +120,10 @@ class PeliculaDAO():DAO<Pelicula> {
     }
     fun findMovieById(context: Context?, id:Long): Pelicula{
         lateinit var res: Pelicula
-        lateinit var db: SQLiteDatabase
+        //lateinit var db: SQLiteDatabase
         lateinit var c: Cursor
         try {
-            db = DBOpenHelper.getInstance(context)!!.readableDatabase
+            val db = DBOpenHelper.getInstance(context)!!.readableDatabase
             val columnas = arrayOf(
                 PeliculaCineContract.Companion.EntradaPeli.IDCOL,
                 PeliculaCineContract.Companion.EntradaPeli.TITULOCOL,

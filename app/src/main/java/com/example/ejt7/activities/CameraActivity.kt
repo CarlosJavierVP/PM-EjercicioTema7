@@ -41,6 +41,12 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
         id = intent.extras!!.getLong("ID")
         pelicula = intent.extras!!.getString("TITULO").toString()
 
@@ -48,12 +54,6 @@ class CameraActivity : AppCompatActivity() {
             startCamera()
         }else {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
         }
 
         binding.btnTakePhoto.setOnClickListener{ takePhoto() }

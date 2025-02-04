@@ -262,9 +262,14 @@ class MainActivity : AppCompatActivity() {
     private fun refrescar(){
         binding.swipeL.setOnRefreshListener {
             //listaPeliculas = cargarLista()
-            listaPeliculas = miDAO.findAll(this)
+            listaPeliculas = listOf()
             adapter.updateList(listaPeliculas)
-            binding.swipeL.isRefreshing = false
+
+            listaPeliculas = miDAO.findAll(this) //
+            adapter.updateList(listaPeliculas) //
+            adapter.notifyItemRangeInserted(0, listaPeliculas.size-1)
+            listaVacia = false
+            binding.swipeL.isRefreshing = false //
         }
     }
 
