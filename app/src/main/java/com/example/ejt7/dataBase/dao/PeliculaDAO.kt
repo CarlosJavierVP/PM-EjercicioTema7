@@ -94,7 +94,7 @@ class PeliculaDAO():DAO<Pelicula> {
     override fun save(context: Context?, pelicula: Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         db.execSQL(
-            "INSERT INTO Pelicula (titulo, descripcion, poster, duracion, anho, pais, uri) VALUES "
+            "INSERT INTO Pelicula (title, description, poster, time, year, country, uri) VALUES "
                     +" ('${pelicula.title}', '${pelicula.description}', '${pelicula.poster}', "
                     +" '${pelicula.time}', '${pelicula.year}', '${pelicula.country}','${pelicula.uri}');"
         )
@@ -151,7 +151,7 @@ class PeliculaDAO():DAO<Pelicula> {
             e.printStackTrace()
         }finally {
             c.close()
-            db.close()
+            //db.close()
         }
         return res
     }
