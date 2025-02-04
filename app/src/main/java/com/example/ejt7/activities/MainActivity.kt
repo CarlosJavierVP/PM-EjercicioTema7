@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult())
         {
             result:ActivityResult ->
-            //habría que actualizar la DB (el método está implementado en el dao) para que persistieran las modificaciones
             if(result.resultCode==RESULT_OK){
                 val nuevoTitulo=result.data?.extras?.getString("CAMBIAR_TITULO").toString()
                 val posicionPeli = result.data?.extras?.getInt("POSICION_PELI")

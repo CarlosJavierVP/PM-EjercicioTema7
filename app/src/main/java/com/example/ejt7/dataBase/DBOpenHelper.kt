@@ -1,6 +1,5 @@
 package com.example.ejt7.dataBase
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -27,14 +26,14 @@ class DBOpenHelper private constructor(context: Context?):
             if (p0 != null) {
                 p0.execSQL(
                     "CREATE TABLE ${PeliculaCineContract.Companion.EntradaPeli.TABLA}"
-                            +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} integer primary key"
+                            +"(${PeliculaCineContract.Companion.EntradaPeli.IDCOL} Long primary key"
                             +",${PeliculaCineContract.Companion.EntradaPeli.TITULOCOL} VARCHAR(20) NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.DESCRIPCIONCOL} VARCHAR(70) NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.POSTERCOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.TIMECOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.YEARCOL} int NOT NULL"
                             +",${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL} VARCHAR(20) NOT NULL"
-                            +",${PeliculaCineContract.Companion.EntradaPeli.URICOL} VARCHAR(100))"
+                            +",${PeliculaCineContract.Companion.EntradaPeli.URICOL} VARCHAR(100) NOT NULL)"
                 )
                 p0.execSQL("CREATE TABLE ${PeliculaCineContract.Companion.EntradaCine.TABLA}"
                         +"(${PeliculaCineContract.Companion.EntradaCine.ID} Integer primary key"
@@ -78,7 +77,7 @@ class DBOpenHelper private constructor(context: Context?):
                         "${PeliculaCineContract.Companion.EntradaPeli.YEARCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL},"+
                         "${PeliculaCineContract.Companion.EntradaPeli.URICOL})"+
-                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}, '${peli.uri}');")
+                        " VALUES ('${peli.title}','${peli.description}','${peli.poster}','${peli.time}','${peli.year}','${peli.country}', '${peli.uri}');")
             )
         }
         for (cine in listaCine){

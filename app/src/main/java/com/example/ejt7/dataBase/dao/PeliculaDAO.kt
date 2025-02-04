@@ -3,11 +3,8 @@ package com.example.ejt7.dataBase.dao
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import com.example.ejt7.contract.PeliculaCineContract
 import com.example.ejt7.dataBase.DBOpenHelper
-import com.example.ejt7.models.Cine
-import com.example.ejt7.models.Ciudad
 import com.example.ejt7.models.Pelicula
 
 class PeliculaDAO():DAO<Pelicula> {
@@ -30,7 +27,6 @@ class PeliculaDAO():DAO<Pelicula> {
             )
             c = db.query(PeliculaCineContract.Companion.EntradaPeli.TABLA,
                 columnas, null, null, null, null, null)
-
             lista = mutableListOf()
 
             while (c.moveToNext()){
@@ -72,7 +68,7 @@ class PeliculaDAO():DAO<Pelicula> {
     override fun update(context: Context?, pelicula:Pelicula){
         val db = DBOpenHelper.getInstance(context)!!.writableDatabase
         val q = db.compileStatement("UPDATE Pelicula SET titulo=? WHERE id=${pelicula.id};")
-        q.bindString(1,pelicula.title)
+        q.bindString(1,pelicula.id.toString())
         q.executeUpdateDelete()
         q.close()
         db.close()
@@ -91,7 +87,7 @@ class PeliculaDAO():DAO<Pelicula> {
         values.put(PeliculaCineContract.Companion.EntradaPeli.YEARCOL, pelicula.year)
         values.put(PeliculaCineContract.Companion.EntradaPeli.COUNTRYCOL, pelicula.country)
         values.put(PeliculaCineContract.Companion.EntradaPeli.URICOL, pelicula.uri)
-        db.update(PeliculaCineContract.Companion.EntradaPeli.TABLA, values, "id=?", arrayOf(pelicula.id.toString()))
+        db.update(PeliculaCineContract.Companion.EntradaPeli.TABLA, values, "id = ?", arrayOf(pelicula.id.toString()))
         db.close()
     }
 
@@ -138,8 +134,8 @@ class PeliculaDAO():DAO<Pelicula> {
             val valores = arrayOf(identificador)
             c = db.query(
                 PeliculaCineContract.Companion.EntradaPeli.TABLA,
-                columnas, "id=?", valores, null, null, null)
-            if(c.moveToNext()){
+                columnas, "id = ?", valores, null, null, null)
+            while(c.moveToNext()){
                 res = Pelicula(
                     c.getLong(0),
                     c.getString(1),

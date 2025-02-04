@@ -138,7 +138,7 @@ class CameraActivity : AppCompatActivity() {
 
 
     companion object{
-        private const val TAG = "Proyecto 11"
+        private const val TAG = "Proyecto11"
         private const val FILENAME_FORMAT = "yyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = mutableListOf(Manifest.permission.CAMERA)
