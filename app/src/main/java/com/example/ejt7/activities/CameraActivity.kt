@@ -41,8 +41,8 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        id = intent.extras!!.getLong("id")
-        pelicula = intent.extras!!.getString("pelicula").toString()
+        id = intent.extras!!.getLong("ID")
+        pelicula = intent.extras!!.getString("TITULO").toString()
 
         if (allPermissionsGranted()){
             startCamera()
