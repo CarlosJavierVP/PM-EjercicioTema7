@@ -33,7 +33,7 @@ class CameraActivity : AppCompatActivity() {
 
     private lateinit var imageCapture: ImageCapture
     private lateinit var pelicula: String
-    private var id = -1L
+    private var id = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class CameraActivity : AppCompatActivity() {
             insets
         }
 
-        id = intent.extras!!.getLong("ID")
+        id = intent.extras!!.getInt("ID")
         pelicula = intent.extras!!.getString("TITULO").toString()
 
         if (allPermissionsGranted()){

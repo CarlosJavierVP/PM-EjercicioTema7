@@ -27,7 +27,7 @@ class CineDAO: DAO<Cine> {
             val db = DBOpenHelper.getInstance(context)!!.readableDatabase
             c = db.rawQuery(SELECT_ALl_CINEMA, null)
             while(c.moveToNext()){
-                listaCines.add(Cine(c.getLong(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
+                listaCines.add(Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
             }
         }catch (e: Exception){
             e.printStackTrace()
@@ -37,7 +37,7 @@ class CineDAO: DAO<Cine> {
         return listaCines
     }
 
-    override fun delete(context: Context?, t: Long) {
+    override fun delete(context: Context?, t: Int) {
         TODO("Not yet implemented")
     }
 
@@ -58,7 +58,7 @@ class CineDAO: DAO<Cine> {
             val db = DBOpenHelper.getInstance(context)!!.readableDatabase
             c = db.rawQuery("SELECT * FROM Cine c INNER JOIN Relacion r ON c.id = r.id_cine WHERE r.id_peli = ?", arrayOf(peli.id.toString()))
             while(c.moveToNext()){
-                listaCines.add(Cine(c.getLong(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
+                listaCines.add(Cine(c.getInt(0),c.getString(1), Ciudad.valueOf(c.getString(2)),c.getDouble(3), c.getDouble(4)))
             }
         }catch (e: Exception){
             e.printStackTrace()
@@ -67,8 +67,6 @@ class CineDAO: DAO<Cine> {
         }
         return listaCines
     }
-
-
 
 
     fun findById(context: Context?, id:Int):Cine{
@@ -80,7 +78,7 @@ class CineDAO: DAO<Cine> {
             c = db.rawQuery(SELECT_CINE_ID, arrayOf(id.toString()))
             if(c.moveToNext()){
                 res = Cine(
-                    c.getLong(0),
+                    c.getInt(0),
                     c.getString(1),
                     Ciudad.valueOf(c.getString(2)),
                     c.getDouble(3),

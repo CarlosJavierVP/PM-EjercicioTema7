@@ -43,7 +43,7 @@ class MapActivity : AppCompatActivity() {
         val mapController = map.controller
         mapController.setZoom(9.5)
 
-        val idPeli = intent.getLongExtra("ID",0)
+        val idPeli = intent.getIntExtra("ID",0)
         daoPeli = PeliculaDAO()
         daoCine = CineDAO()
 
